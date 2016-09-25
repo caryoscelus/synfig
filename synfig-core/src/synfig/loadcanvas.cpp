@@ -79,6 +79,7 @@
 #include "valuenodes/valuenode_dynamiclist.h"
 #include "valuenodes/valuenode_exp.h"
 #include "valuenodes/valuenode_linear.h"
+#include "valuenodes/valuenode_patch.h"
 #include "valuenodes/valuenode_reference.h"
 #include "valuenodes/valuenode_scale.h"
 #include "valuenodes/valuenode_segcalctangent.h"
@@ -1669,6 +1670,8 @@ ValueBase CanvasParser::parse_patch(xmlpp::Element *element,Canvas::Handle canva
 		error_unexpected_element(element,element->get_name(),"patch");
 		return ValueBase();
 	}
+
+	ValueNode_Patch patch;
 
 
 	xmlpp::Element::NodeList list = element->get_children();
