@@ -1662,8 +1662,29 @@ CanvasParser::parse_value(xmlpp::Element *element,Canvas::Handle canvas)
 }
 
 
-ValueBase CanvasParser::parse_patch(xmlpp::Element *node,Canvas::Handle canvas)
+ValueBase CanvasParser::parse_patch(xmlpp::Element *element,Canvas::Handle canvas)
 {
+	if(element->get_name()!="patch")
+	{
+		error_unexpected_element(element,element->get_name(),"patch");
+		return ValueBase();
+	}
+
+
+	xmlpp::Element::NodeList list = element->get_children();
+	for(xmlpp::Element::NodeList::iterator iter = list.begin(); iter != list.end(); ++iter)
+	{
+		printf("child\n");
+		xmlpp::Element *child(dynamic_cast<xmlpp::Element*>(*iter));
+		if(child)
+		{
+			printf("child ok\n");
+			if(child->get_name()=="param")
+			{
+				printf("got param\n");
+			}
+		}
+	}
 	return ValueBase();
 }
 

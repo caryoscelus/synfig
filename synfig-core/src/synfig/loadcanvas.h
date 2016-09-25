@@ -217,7 +217,7 @@ private:
 	Keyframe parse_keyframe(xmlpp::Element *node,Canvas::Handle canvas);
 
 	//! Patch parsing
-	ValueBase parse_patch(xmlpp::Element *node,Canvas::Handle canvas);
+	ValueBase parse_patch(xmlpp::Element *element,Canvas::Handle canvas);
 
 	//! ValueNode Animated Parsing Function
 	etl::handle<ValueNode_Animated> parse_animated(xmlpp::Element *node,Canvas::Handle canvas);
