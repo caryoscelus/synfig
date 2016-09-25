@@ -114,6 +114,10 @@ Layer_PatchGroup::get_param_vocab()const
 		.set_local_name(_("Z Range Blur"))
 		.set_description(_("Area where layers inside are partially visible"))
 	);
+	ret.push_back(ParamDesc("patches")
+		.set_local_name(_("Patches"))
+		.set_description(_("Patches applied to child node"))
+	);
 
 	return ret;
 }
@@ -159,7 +163,7 @@ Layer_PatchGroup::apply_z_range_to_params(ContextParams &cp)const
 void
 Layer_PatchGroup::on_canvas_set()
 {
-	printf("ON_CANVAS_SET");
+	printf("ON_CANVAS_SET\n");
 	Layer_PasteCanvas::on_canvas_set();
 }
 

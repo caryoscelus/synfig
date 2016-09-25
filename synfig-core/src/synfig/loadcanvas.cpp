@@ -1611,6 +1611,12 @@ CanvasParser::parse_value(xmlpp::Element *element,Canvas::Handle canvas)
 		return ret;
 	}
 	else
+	if(element->get_name()=="patch")
+	{
+		printf("GOT THE PATCH\n");
+		return parse_patch(element,canvas);
+	}
+	else
 	if(element->get_name()=="canvas")
 	{
 		ValueBase ret;
@@ -1656,7 +1662,10 @@ CanvasParser::parse_value(xmlpp::Element *element,Canvas::Handle canvas)
 }
 
 
-
+ValueBase CanvasParser::parse_patch(xmlpp::Element *node,Canvas::Handle canvas)
+{
+	return ValueBase();
+}
 
 ValueNode_Animated::Handle
 CanvasParser::parse_animated(xmlpp::Element *element,Canvas::Handle canvas)
@@ -2673,6 +2682,12 @@ CanvasParser::parse_value_node(xmlpp::Element *element,Canvas::Handle canvas)
 			if (getenv("SYNFIG_DEBUG_LOAD_CANVAS")) printf("%s:%d parse_linkable_value_node gave us a null valuenode\n", __FILE__, __LINE__);
 			value_node = PlaceholderValueNode::create();
 		}
+	}
+	else
+	if(element->get_name()=="patch")
+	{
+		printf("GOT THE PATCH\n");
+		return ValueNode_Const::create(parse_patch(element,canvas),canvas);
 	}
 	else
 	if(element->get_name()=="canvas")
