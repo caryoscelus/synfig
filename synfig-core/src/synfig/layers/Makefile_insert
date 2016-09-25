@@ -9,6 +9,7 @@ LAYERS_HH = \
 	layers/layer_mime.h \
 	layers/layer_motionblur.h \
 	layers/layer_pastecanvas.h \
+	layers/layer_patchgroup.h \
 	layers/layer_polygon.h \
 	layers/layer_rendering_task.h \
 	layers/layer_shape.h \
@@ -29,6 +30,7 @@ LAYERS_CC = \
 	layers/layer_mime.cpp \
 	layers/layer_motionblur.cpp \
 	layers/layer_pastecanvas.cpp \
+	layers/layer_patchgroup.cpp \
 	layers/layer_polygon.cpp \
 	layers/layer_rendering_task.cpp \
 	layers/layer_shape.cpp \
