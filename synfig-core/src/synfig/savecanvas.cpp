@@ -323,6 +323,8 @@ xmlpp::Element* encode_patch(xmlpp::Element* root, ValueNode_Patch::ConstHandle 
 		printf("%s\n", e.first.c_str());
 		xmlpp::Element *param=root->add_child("param");
 		param->set_attribute("name", e.first);
+		xmlpp::Element *value=param->add_child("");
+		value = encode_value_node(value, e.second, canvas);
 	}
 	return root;
 }
