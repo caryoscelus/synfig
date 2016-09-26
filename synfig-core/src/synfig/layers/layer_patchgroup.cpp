@@ -117,9 +117,9 @@ Layer_PatchGroup::get_param_vocab()const
 		.set_local_name(_("Z Range Blur"))
 		.set_description(_("Area where layers inside are partially visible"))
 	);
-	ret.push_back(ParamDesc("patches")
-		.set_local_name(_("Patches"))
-		.set_description(_("Patches applied to child node"))
+	ret.push_back(ParamDesc("patch")
+		.set_local_name(_("Patch"))
+		.set_description(_("Patch applied to child node"))
 	);
 
 	return ret;

@@ -641,4 +641,5 @@ namespace synfig {
 	Type &type_bone_object		= TypeBoneObject::instance;
 	Type &type_bone_valuenode	= TypeBoneValueNode::instance;
 	Type &type_transformation	= TypeTransformation::instance;
+	Type &type_patch			= TypePatchValueNode::instance;
 }; // END of namespace synfig
