@@ -314,6 +314,16 @@ xmlpp::Element* encode_pair(xmlpp::Element* root,types_namespace::TypePairBase &
 xmlpp::Element* encode_patch(xmlpp::Element* root, ValueNode_Patch::ConstHandle patch, Canvas::ConstHandle canvas=0)
 {
 	root->set_name("patch");
+	if (!patch) {
+		error("got no patch");
+		return root;
+	}
+	for (const auto &e : patch->params)
+	{
+		printf("%s\n", e.first.c_str());
+		xmlpp::Element *param=root->add_child("param");
+		param->set_attribute("name", e.first);
+	}
 	return root;
 }
 
@@ -425,7 +435,7 @@ xmlpp::Element* encode_value(xmlpp::Element* root,const ValueBase &data,Canvas::
 	}
 	if (type == type_patch)
 	{
-		return encode_patch(root, data.get(new ValueNode_Patch()));
+		return encode_patch(root, data.get(ValueNode_Patch::Handle()));
 	}
 	if (dynamic_cast<types_namespace::TypeWeightedValueBase*>(&type) != NULL)
 	{

@@ -41,9 +41,9 @@ class ValueNode_Patch : public ValueNode
 {
 public:
 	typedef etl::handle<ValueNode_Patch> Handle;
+	typedef etl::loose_handle<ValueNode_Patch> LooseHandle;
 	typedef etl::handle<const ValueNode_Patch> ConstHandle;
 
-protected:
 	std::map<String, ValueNode::RHandle> params;
 
 public:

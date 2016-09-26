@@ -570,10 +570,10 @@ class TypePatchValueNode : public Type
 		mutable ValueNode_Patch::LooseHandle lh;
 		mutable ValueNode_Patch* p;
 		Inner(): p(NULL) { }
-		Inner& operator= (const ValueNode_Patch::LooseHandle &other) { /*h = other;*/ return *this; }
-		Inner& operator= (const ValueNode_Patch::Handle &other) { /*h = other; */return *this; }
-		Inner& operator= (ValueNode_Patch* const &other) { /*h = other;*/ return *this; }
-		Inner& operator= (const Inner &other) { return *this /*= other.h*/; }
+		Inner& operator= (const ValueNode_Patch::LooseHandle &other) { h = other; return *this; }
+		Inner& operator= (const ValueNode_Patch::Handle &other) { h = other; return *this; }
+		Inner& operator= (ValueNode_Patch* const &other) { h = other; return *this; }
+		Inner& operator= (const Inner &other) { return *this = other.h; }
 		bool operator== (const Inner &other) const { return h == other.h; }
 		operator const ValueNode_Patch::LooseHandle&() const { return lh = h; }
 		operator ValueNode_Patch* const&() const { return p = &*h; }
