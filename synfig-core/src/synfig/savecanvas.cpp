@@ -50,6 +50,7 @@
 #include "valuenodes/valuenode_bone.h"
 #include "valuenodes/valuenode_wplist.h"
 #include "valuenodes/valuenode_dilist.h"
+#include "valuenodes/valuenode_patch.h"
 #include "dashitem.h"
 #include "time.h"
 #include "keyframe.h"
@@ -310,6 +311,12 @@ xmlpp::Element* encode_pair(xmlpp::Element* root,types_namespace::TypePairBase &
 	return root;
 }
 
+xmlpp::Element* encode_patch(xmlpp::Element* root, ValueNode_Patch::ConstHandle patch, Canvas::ConstHandle canvas=0)
+{
+	root->set_name("patch");
+	return root;
+}
+
 xmlpp::Element* encode_value(xmlpp::Element* root,const ValueBase &data,Canvas::ConstHandle canvas)
 {
 	if (getenv("SYNFIG_DEBUG_SAVE_CANVAS")) printf("%s:%d encode_value (type %s)\n", __FILE__, __LINE__, data.get_type().description.name.c_str());
@@ -415,6 +422,10 @@ xmlpp::Element* encode_value(xmlpp::Element* root,const ValueBase &data,Canvas::
 		root = encode_value_node_bone_id(root,data.get(ValueNode_Bone::Handle()).get(),canvas);
 		root->set_name("bone_valuenode");
 		return root;
+	}
+	if (type == type_patch)
+	{
+		return encode_patch(root, data.get(new ValueNode_Patch()));
 	}
 	if (dynamic_cast<types_namespace::TypeWeightedValueBase*>(&type) != NULL)
 	{
