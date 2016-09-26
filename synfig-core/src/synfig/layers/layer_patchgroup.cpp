@@ -35,6 +35,8 @@
 
 #include "layer_patchgroup.h"
 
+#include "../valuenodes/valuenode_patch.h"
+
 #include <synfig/general.h>
 #include <synfig/localization.h>
 
@@ -76,6 +78,7 @@ Layer_PatchGroup::Layer_PatchGroup()
 	param_z_range_position=ValueBase(Real(0.0));
 	param_z_range_depth=ValueBase(Real(0.0));
 	param_z_range_blur=ValueBase(Real(0.0));
+	param_patch=ValueBase(new ValueNode_Patch());
 
 	SET_INTERPOLATION_DEFAULTS();
 	SET_STATIC_DEFAULTS();
@@ -125,10 +128,12 @@ Layer_PatchGroup::get_param_vocab()const
 bool
 Layer_PatchGroup::set_param(const String & param, const ValueBase &value)
 {
+// 	printf("%s - type: %s, wanted %s\n", param.c_str(), value.get_type().description.name.c_str(), param_patch.get_type().description.name.c_str());
 	IMPORT_VALUE(param_z_range);
 	IMPORT_VALUE(param_z_range_position);
 	IMPORT_VALUE(param_z_range_depth);
 	IMPORT_VALUE(param_z_range_blur);
+	IMPORT_VALUE(param_patch);
 	return Layer_PasteCanvas::set_param(param,value);
 }
 
@@ -139,6 +144,7 @@ Layer_PatchGroup::get_param(const String& param)const
 	EXPORT_VALUE(param_z_range_position);
 	EXPORT_VALUE(param_z_range_depth);
 	EXPORT_VALUE(param_z_range_blur);
+	EXPORT_VALUE(param_patch);
 
 	EXPORT_NAME();
 	EXPORT_VERSION();

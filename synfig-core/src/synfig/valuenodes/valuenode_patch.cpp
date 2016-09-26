@@ -79,4 +79,15 @@ ValueNode_Patch* ValueNode_Patch::create(const ValueBase &x, etl::loose_handle<C
 	return 0;
 }
 
+bool
+ValueNode_Patch::check_type(Type & /* type */)
+{
+	return true;
+}
+
+void ValueNode_Patch::add_param(String name, ValueNode::RHandle param)
+{
+	params.insert(pair<String,ValueNode::RHandle>(name, param));
+}
+
 /* === M E T H O D S ======================================================= */

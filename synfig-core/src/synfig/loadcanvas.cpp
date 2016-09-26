@@ -1671,7 +1671,7 @@ ValueBase CanvasParser::parse_patch(xmlpp::Element *element,Canvas::Handle canva
 		return ValueBase();
 	}
 
-	ValueNode_Patch patch;
+	ValueNode_Patch *patch = new ValueNode_Patch();
 
 
 	xmlpp::Element::NodeList list = element->get_children();
@@ -1684,11 +1684,24 @@ ValueBase CanvasParser::parse_patch(xmlpp::Element *element,Canvas::Handle canva
 			printf("child ok\n");
 			if(child->get_name()=="param")
 			{
-				printf("got param\n");
+				String name = child->get_attribute("name")->get_value();
+				ValueNode::Handle node;
+				printf("got param %s\n", name.c_str());
+				xmlpp::Element::NodeList subchildren = child->get_children();
+				for(xmlpp::Element::NodeList::iterator iter2 = subchildren.begin(); iter2 != subchildren.end(); ++iter2)
+				{
+					xmlpp::Element *subchild(dynamic_cast<xmlpp::Element*>(*iter2));
+					if(subchild)
+					{
+						node = parse_value_node(subchild, canvas);
+						break;
+					}
+				}
+				patch->add_param(name, node);
 			}
 		}
 	}
-	return ValueBase();
+	return ValueNode_Patch::Handle(patch);
 }
 
 ValueNode_Animated::Handle

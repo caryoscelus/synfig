@@ -39,6 +39,7 @@
 #include "value.h"
 #include "canvas.h"
 #include "valuenodes/valuenode_bone.h"
+#include "valuenodes/valuenode_patch.h"
 #include "gradient.h"
 #include "bone.h"
 #include "matrix.h"
@@ -559,6 +560,45 @@ SYNFIG_IMPLEMENT_TYPE_ALIAS(ValueNode_Bone::Handle, TypeBoneValueNode)
 SYNFIG_IMPLEMENT_TYPE_ALIAS(ValueNode_Bone::LooseHandle, TypeBoneValueNode)
 SYNFIG_IMPLEMENT_TYPE_ALIAS(ValueNode_Bone*, TypeBoneValueNode)
 
+
+class TypePatchValueNode : public Type
+{
+	class Inner
+	{
+	public:
+		ValueNode_Patch::Handle h;
+		mutable ValueNode_Patch::LooseHandle lh;
+		mutable ValueNode_Patch* p;
+		Inner(): p(NULL) { }
+		Inner& operator= (const ValueNode_Patch::LooseHandle &other) { /*h = other;*/ return *this; }
+		Inner& operator= (const ValueNode_Patch::Handle &other) { /*h = other; */return *this; }
+		Inner& operator= (ValueNode_Patch* const &other) { /*h = other;*/ return *this; }
+		Inner& operator= (const Inner &other) { return *this /*= other.h*/; }
+		bool operator== (const Inner &other) const { return h == other.h; }
+		operator const ValueNode_Patch::LooseHandle&() const { return lh = h; }
+		operator ValueNode_Patch* const&() const { return p = &*h; }
+		operator const ValueNode_Patch::Handle&() const { return h; }
+	};
+	static String to_string(const Inner &x)
+	{
+		return etl::strprintf("a patch");
+	}
+	void initialize_vfunc(Description &description)
+	{
+		Type::initialize_vfunc(description);
+		description.name = "patch";
+		description.local_name = N_("patch");
+		register_all<Inner, ValueNode_Patch::LooseHandle, to_string>();
+		register_alias<Inner, ValueNode_Patch::Handle>();
+		register_alias<Inner, ValueNode_Patch*>();
+	}
+public:
+	static TypePatchValueNode instance;
+};
+TypePatchValueNode TypePatchValueNode::instance;
+SYNFIG_IMPLEMENT_TYPE_ALIAS(ValueNode_Patch::Handle, TypePatchValueNode)
+SYNFIG_IMPLEMENT_TYPE_ALIAS(ValueNode_Patch::LooseHandle, TypePatchValueNode)
+SYNFIG_IMPLEMENT_TYPE_ALIAS(ValueNode_Patch*, TypePatchValueNode)
 
 // Transformation
 

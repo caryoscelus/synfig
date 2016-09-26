@@ -44,7 +44,11 @@ public:
 	typedef etl::handle<const ValueNode_Patch> ConstHandle;
 
 protected:
-	std::map<String, ValueNode::RHandle> values;
+	std::map<String, ValueNode::RHandle> params;
+
+public:
+	void add_param(String name, ValueNode::RHandle param);
+
 public:
 	ValueNode_Patch();
 	~ValueNode_Patch();
@@ -57,6 +61,7 @@ public:
 	virtual void get_times_vfunc(Node::time_set &set) const;
 
 	static ValueNode_Patch* create(const ValueBase &x, etl::loose_handle<Canvas> canvas = 0);
+	static bool check_type(Type &type);
 };
 
 }; // END of namespace synfig
