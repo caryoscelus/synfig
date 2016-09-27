@@ -437,7 +437,7 @@ xmlpp::Element* encode_value(xmlpp::Element* root,const ValueBase &data,Canvas::
 	}
 	if (type == type_patch)
 	{
-		return encode_patch(root, data.get(ValueNode_Patch::Handle()));
+		return encode_patch(root, data.get(ValueNode_Patch::Handle()), canvas);
 	}
 	if (dynamic_cast<types_namespace::TypeWeightedValueBase*>(&type) != NULL)
 	{
