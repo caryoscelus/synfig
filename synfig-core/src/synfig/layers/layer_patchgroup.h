@@ -5,11 +5,7 @@
 **	$Id$
 **
 **	\legal
-**	Copyright (c) 2002-2005 Robert B. Quattlebaum Jr., Adrian Bentley
-**	Copyright (c) 2007, 2008 Chris Moore
-**	Copyright (c) 2012-2013 Carlos López
-**	......... ... 2014 Ivan Mahonin
-**	......... ... 2016 caryoscelus
+**	Copyright (c) 2016 caryoscelus
 **
 **	This package is free software; you can redistribute it and/or
 **	modify it under the terms of the GNU General Public License as
@@ -31,7 +27,7 @@
 
 /* === H E A D E R S ======================================================= */
 
-#include "layer_pastecanvas.h"
+#include "layer_group.h"
 
 /* === M A C R O S ========================================================= */
 
@@ -41,21 +37,13 @@
 
 namespace synfig {
 /*!	\class Layer_PatchGroup
-**	\brief Class of the Group layer.
+**	\brief Class of the Patch Group layer
 */
-class Layer_PatchGroup : public Layer_PasteCanvas
+class Layer_PatchGroup : public Layer_Group
 {
 	//! Layer module: defines the needed members to belong to a layer's factory.
 	SYNFIG_LAYER_MODULE_EXT
 private:
-	//! Parameter: (bool) Z_Depth Range is active
-	ValueBase param_z_range;
-	//! Parameter: (Real) Z_Depth Range position
-	ValueBase param_z_range_position;
-	//! Parameter: (Real) Z_Depth Range depth
-	ValueBase param_z_range_depth;
-	//! Parameter: (Real) Z_Depth Range transition
-	ValueBase param_z_range_blur;
 	//! Parameter: (Patch) Patch
 	ValueBase param_patch;
 
@@ -75,9 +63,6 @@ public:
 	virtual ValueBase get_param(const String & param)const;
 	//! Gets the parameter vocabulary
 	virtual Vocab get_param_vocab()const;
-
-	//! Sets z_range* fields of specified ContextParams \a cp
-	virtual void apply_z_range_to_params(ContextParams &cp)const;
 
 	virtual void on_canvas_set();
 }; // END of class Layer_PatchGroup

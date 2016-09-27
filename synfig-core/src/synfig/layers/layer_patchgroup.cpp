@@ -5,11 +5,7 @@
 **	$Id$
 **
 **	\legal
-**	Copyright (c) 2002-2005 Robert B. Quattlebaum Jr., Adrian Bentley
-**	Copyright (c) 2007, 2008 Chris Moore
-**	Copyright (c) 2011-2013 Carlos López
-**	......... ... 2014 Ivan Mahonin
-**	......... ... 2016 caryoscelus
+**	Copyright (c) 2016 caryoscelus
 **
 **	This package is free software; you can redistribute it and/or
 **	modify it under the terms of the GNU General Public License as
@@ -74,10 +70,7 @@ SYNFIG_LAYER_SET_CVS_ID(Layer_PatchGroup,"$Id$");
 
 Layer_PatchGroup::Layer_PatchGroup()
 {
-	param_z_range=ValueBase(bool(false));
-	param_z_range_position=ValueBase(Real(0.0));
-	param_z_range_depth=ValueBase(Real(0.0));
-	param_z_range_blur=ValueBase(Real(0.0));
+
 	param_patch=ValueBase(new ValueNode_Patch());
 
 	SET_INTERPOLATION_DEFAULTS();
@@ -91,32 +84,15 @@ Layer_PatchGroup::~Layer_PatchGroup()
 String
 Layer_PatchGroup::get_local_name()const
 {
-	String s = Layer_PasteCanvas::get_local_name();
-	return s.empty() ? _("Group") : '[' + s + ']';
+	String s = Layer_Group::get_local_name();
+	return s.empty() ? _("Patch Group") : '[' + s + ']';
 }
 
 Layer::Vocab
 Layer_PatchGroup::get_param_vocab()const
 {
-	Layer::Vocab ret(Layer_PasteCanvas::get_param_vocab());
+	Layer::Vocab ret(Layer_Group::get_param_vocab());
 
-	ret.push_back(ParamDesc("z_range")
-		.set_local_name(_("Z Range"))
-		.set_description(_("When checked, only layers inside range are visible"))
-		.set_static(true)
-	);
-	ret.push_back(ParamDesc("z_range_position")
-		.set_local_name(_("Z Range Position"))
-		.set_description(_("Starting position where layers are visible"))
-	);
-	ret.push_back(ParamDesc("z_range_depth")
-		.set_local_name(_("Z Range Depth"))
-		.set_description(_("Depth where layers are visible in range"))
-	);
-	ret.push_back(ParamDesc("z_range_blur")
-		.set_local_name(_("Z Range Blur"))
-		.set_description(_("Area where layers inside are partially visible"))
-	);
 	ret.push_back(ParamDesc("patch")
 		.set_local_name(_("Patch"))
 		.set_description(_("Patch applied to child node"))
@@ -128,14 +104,10 @@ Layer_PatchGroup::get_param_vocab()const
 bool
 Layer_PatchGroup::set_param(const String & param, const ValueBase &value)
 {
-	IMPORT_VALUE(param_z_range);
-	IMPORT_VALUE(param_z_range_position);
-	IMPORT_VALUE(param_z_range_depth);
-	IMPORT_VALUE(param_z_range_blur);
 	IMPORT_VALUE_PLUS(param_patch,
 		update_children_patch();
 	);
-	return Layer_PasteCanvas::set_param(param,value);
+	return Layer_Group::set_param(param,value);
 }
 
 void
@@ -160,44 +132,24 @@ Layer_PatchGroup::update_children_patch()
 void
 Layer_PatchGroup::on_childs_changed()
 {
-	Layer_PasteCanvas::on_childs_changed();
+	Layer_Group::on_childs_changed();
 	update_children_patch();
 }
 
 ValueBase
 Layer_PatchGroup::get_param(const String& param)const
 {
-	EXPORT_VALUE(param_z_range);
-	EXPORT_VALUE(param_z_range_position);
-	EXPORT_VALUE(param_z_range_depth);
-	EXPORT_VALUE(param_z_range_blur);
 	EXPORT_VALUE(param_patch);
 
 	EXPORT_NAME();
 	EXPORT_VERSION();
 
-	return Layer_PasteCanvas::get_param(param);
+	return Layer_Group::get_param(param);
 }
-
-
-void
-Layer_PatchGroup::apply_z_range_to_params(ContextParams &cp)const
-{
-	if (optimized()) return; // z_range already applied while optimizxation
-
-	cp.z_range=param_z_range.get(bool());
-	cp.z_range_position=param_z_range_position.get(Real());
-	cp.z_range_depth=param_z_range_depth.get(Real());
-	cp.z_range_blur=param_z_range_blur.get(Real());
-}
-
-
 
 void
 Layer_PatchGroup::on_canvas_set()
 {
-	printf("ON_CANVAS_SET\n");
-	Layer_PasteCanvas::on_canvas_set();
+	Layer_Group::on_canvas_set();
 	update_children_patch();
 }
-
