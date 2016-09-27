@@ -151,7 +151,9 @@ Layer_PatchGroup::update_children_patch()
 	{
 		Layer::Handle child = *i;
 		printf("%s\n", child->get_name().c_str());
-		
+		for (const auto &p : param_patch.get(ValueNode_Patch::Handle())->params) {
+			child->connect_dynamic_param(p.first, p.second);
+		}
 	}
 }
 
