@@ -69,6 +69,8 @@ public:
 
 	//!	Sets the parameter described by \a param to \a value. \see Layer::set_param
 	virtual bool set_param(const String & param, const synfig::ValueBase &value);
+	void update_children_patch();
+	virtual void on_childs_changed();
 	//! Get the value of the specified parameter. \see Layer::get_param
 	virtual ValueBase get_param(const String & param)const;
 	//! Gets the parameter vocabulary

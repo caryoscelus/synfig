@@ -128,13 +128,38 @@ Layer_PatchGroup::get_param_vocab()const
 bool
 Layer_PatchGroup::set_param(const String & param, const ValueBase &value)
 {
-// 	printf("%s - type: %s, wanted %s\n", param.c_str(), value.get_type().description.name.c_str(), param_patch.get_type().description.name.c_str());
 	IMPORT_VALUE(param_z_range);
 	IMPORT_VALUE(param_z_range_position);
 	IMPORT_VALUE(param_z_range_depth);
 	IMPORT_VALUE(param_z_range_blur);
-	IMPORT_VALUE(param_patch);
+	IMPORT_VALUE_PLUS(param_patch,
+		update_children_patch();
+	);
 	return Layer_PasteCanvas::set_param(param,value);
+}
+
+void
+Layer_PatchGroup::update_children_patch()
+{
+	printf("applying patch..\n");
+	Canvas::Handle canvas = get_sub_canvas();
+	if (!canvas) {
+		printf("canvas not ready yet!\n");
+		return;
+	}
+	for (auto i = canvas->get_independent_context(); *i; ++i)
+	{
+		Layer::Handle child = *i;
+		printf("%s\n", child->get_name().c_str());
+		
+	}
+}
+
+void
+Layer_PatchGroup::on_childs_changed()
+{
+	Layer_PasteCanvas::on_childs_changed();
+	update_children_patch();
 }
 
 ValueBase
@@ -171,5 +196,6 @@ Layer_PatchGroup::on_canvas_set()
 {
 	printf("ON_CANVAS_SET\n");
 	Layer_PasteCanvas::on_canvas_set();
+	update_children_patch();
 }
 
