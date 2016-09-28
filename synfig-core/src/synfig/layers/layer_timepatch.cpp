@@ -148,18 +148,20 @@ Layer_TimePatch::update_children_patch()
 				printf("it's animated, yay!\n");
 				for (const auto &time_point : animated_time->waypoint_list())
 				{
+					Time time = time_point.get_value().get(Time());
+					auto param_waypoint = *param_animated->find(time);
 					printf("applying timepoint..\n");
+					if (param_waypoint)
+					{
+						printf("waypoint exist here..\n");
+						Waypoint new_waypoint = param_animated->new_waypoint_at_time(time_point.get_time());
+						new_waypoint.set_value(param_waypoint.get_value());
+						param_animated->add(new_waypoint);
+					}
 				}
 			}
 		}
 	}
-}
-
-void
-Layer_TimePatch::on_childs_changed()
-{
-	Layer_Group::on_childs_changed();
-	update_children_patch();
 }
 
 ValueBase
