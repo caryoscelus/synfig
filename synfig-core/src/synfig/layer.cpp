@@ -52,6 +52,7 @@
 #include "layers/layer_duplicate.h"
 #include "layers/layer_group.h"
 #include "layers/layer_patchgroup.h"
+#include "layers/layer_timepatch.h"
 #include "layers/layer_mime.h"
 #include "layers/layer_motionblur.h"
 #include "layers/layer_polygon.h"
@@ -133,6 +134,7 @@ Layer::subsys_init()
 		LAYER_ALIAS(Layer_Group,		"paste_canvas");
 		LAYER_ALIAS(Layer_Group,		"PasteCanvas");
 	INCLUDE_LAYER(Layer_PatchGroup);
+	INCLUDE_LAYER(Layer_TimePatch);
 	INCLUDE_LAYER(Layer_Switch);
 	INCLUDE_LAYER(Layer_Polygon);
 		LAYER_ALIAS(Layer_Polygon,		"Polygon");

@@ -17,7 +17,8 @@ LAYERS_HH = \
 	layers/layer_sound.h \
 	layers/layer_skeleton.h \
 	layers/layer_skeletondeformation.h \
-	layers/layer_switch.h
+	layers/layer_switch.h \
+	layers/layer_timepatch.h
 
 LAYERS_CC = \
 	layers/layer_bitmap.cpp \
@@ -38,7 +39,8 @@ LAYERS_CC = \
 	layers/layer_sound.cpp \
 	layers/layer_skeleton.cpp \
 	layers/layer_skeletondeformation.cpp \
-	layers/layer_switch.cpp
+	layers/layer_switch.cpp \
+	layers/layer_timepatch.cpp
 
 libsynfig_include_HH += \
     $(LAYERS_HH)
