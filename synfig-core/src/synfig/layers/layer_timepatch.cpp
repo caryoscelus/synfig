@@ -43,6 +43,7 @@
 #include <synfig/value.h>
 #include <synfig/valuenode.h>
 
+#include <synfig/valuenodes/valuenode_animated.h>
 
 #endif
 
@@ -118,12 +119,38 @@ Layer_TimePatch::update_children_patch()
 		printf("canvas not ready yet!\n");
 		return;
 	}
+
+	// FIXME
+	ValueNode_Animated::Handle animated_time = nullptr;
+	for (const auto &p : dynamic_param_list()) {
+		if (p.first == "time_patch") {
+			animated_time = dynamic_cast<ValueNode_Animated*>(&*p.second);
+			break;
+		}
+	}
+
+	if (!animated_time) {
+		warning("time_patch is not animated: nothing to do!\n");
+		return;
+	}
+
 	for (auto i = canvas->get_independent_context(); *i; ++i)
 	{
 		Layer::Handle child = *i;
 		printf("Patching %s..\n", child->get_name().c_str());
-		for (auto &param : child->dynamic_param_list()) {
-			printf("found param %s\n", param.first.c_str());
+		for (const auto &param : child->dynamic_param_list())
+		{
+			String param_name = param.first;
+			printf("found param %s\n", param_name.c_str());
+			ValueNode_Animated::Handle param_animated = dynamic_cast<ValueNode_Animated*>(&*param.second); // FIXME
+			if (param_animated)
+			{
+				printf("it's animated, yay!\n");
+				for (const auto &time_point : animated_time->waypoint_list())
+				{
+					printf("applying timepoint..\n");
+				}
+			}
 		}
 	}
 }
