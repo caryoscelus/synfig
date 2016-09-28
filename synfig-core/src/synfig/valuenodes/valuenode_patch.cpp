@@ -1,6 +1,6 @@
 /* === S Y N F I G ========================================================= */
 /*!	\file valuenode_patch.cpp
-**	\brief Patch node (implementation)
+**	\brief Patch node
 **
 **	$Id$
 **

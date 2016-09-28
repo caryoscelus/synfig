@@ -1,6 +1,6 @@
 /* === S Y N F I G ========================================================= */
 /*!	\file layer_patchgroup.cpp
-**	\brief Implementation of the "Group Patch" layer
+**	\brief "Group Patch" layer
 **
 **	$Id$
 **

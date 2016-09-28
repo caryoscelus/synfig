@@ -1,6 +1,6 @@
 /* === S Y N F I G ========================================================= */
-/*!	\file layer_group.h
-**	\brief Header file for implementation of the "Group Patch" layer
+/*!	\file layer_patchgroup.h
+**	\brief "Group Patch" layer (header)
 **
 **	$Id$
 **
