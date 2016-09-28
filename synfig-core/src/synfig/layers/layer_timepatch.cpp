@@ -155,6 +155,8 @@ Layer_TimePatch::update_children_patch()
 					{
 						printf("waypoint exist here..\n");
 						Waypoint new_waypoint = param_animated->new_waypoint_at_time(time_point.get_time());
+						new_waypoint.set_before(param_waypoint.get_before());
+						new_waypoint.set_after(param_waypoint.get_after());
 						new_waypoint.set_value(param_waypoint.get_value());
 						param_animated->add(new_waypoint);
 					}
