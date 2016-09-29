@@ -1125,16 +1125,22 @@ ValueNode_AnimatedInterfaceConst::erase_all()
 void
 ValueNode_AnimatedInterfaceConst::cleanup_transient()
 {
-	printf("cleaning up\n");
-	remove_if(
-		editable_waypoint_list().begin(),
-		editable_waypoint_list().end(),
-		[](auto waypoint) -> bool {
-			printf("remove\n");
-			return waypoint.is_transient();
+	auto& waypoints = editable_waypoint_list();
+	printf("cleaning up; length is %d\n", waypoints.size());
+	waypoints.erase(remove_if(
+		waypoints.begin(),
+		waypoints.end(),
+		[this](auto waypoint) -> bool {
+			bool to_remove = waypoint.is_transient();
+			if (to_remove) {
+				printf("remove!\n");
+				if (waypoint.get_value_node() && this->waypoint_is_only_use_of_valuenode(waypoint))
+					this->node().remove_child(waypoint.get_value_node().get());
+			}
+			return to_remove;
 		}
-	);
-	printf("end cleanup\n");
+	), waypoints.end());
+	printf("end cleanup; length is %d now\n", editable_waypoint_list().size());
 }
 
 ValueNode_AnimatedInterfaceConst::WaypointList::iterator
