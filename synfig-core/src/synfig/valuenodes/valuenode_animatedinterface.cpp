@@ -1140,6 +1140,7 @@ ValueNode_AnimatedInterfaceConst::cleanup_transient()
 			return to_remove;
 		}
 	), waypoints.end());
+	on_changed();
 	printf("end cleanup; length is %d now\n", editable_waypoint_list().size());
 }
 
