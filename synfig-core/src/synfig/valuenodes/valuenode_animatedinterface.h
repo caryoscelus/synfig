@@ -98,6 +98,9 @@ protected:
 	//! Removes all waypoints
 	void erase_all();
 
+	//! Remove all transient waypoints
+	void cleanup_transient();
+
 	//! Finds Waypoint iterator and associated boolean if found. Find by UniqueID
 	findresult 			   find_uid(const UniqueID &x);
 	//! Finds Waypoint iterator and associated boolean if found. Find by Time
@@ -164,6 +167,7 @@ public:
 	using ValueNode_AnimatedInterfaceConst::insert_time;
 	using ValueNode_AnimatedInterfaceConst::erase;
 	using ValueNode_AnimatedInterfaceConst::erase_all;
+	using ValueNode_AnimatedInterfaceConst::cleanup_transient;
 
 	using ValueNode_AnimatedInterfaceConst::find_uid;
 	using ValueNode_AnimatedInterfaceConst::find_time;

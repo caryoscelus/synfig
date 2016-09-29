@@ -203,6 +203,9 @@ private:
 	//! Shouldn't be Real?
 	float time_tension;
 
+	//! \see is_transient
+	bool _is_transient;
+
 	/*
  --	** -- C O N S T R U C T O R S ---------------------------------------------
 	*/
@@ -277,6 +280,18 @@ public:
 
 	//! \true if the Value Node is constant, not null and not exported
 	bool is_static()const;
+
+	//! Returns whether this waypoint is transient
+	//! \see Layer_TimePatch
+	//! - created by time patching
+	//! - can be removed at a whim (e.g. time patch layer update)
+	//! - ignored on saving
+	//! - SHOULD be uneditable and displayed so in studio
+	bool is_transient()const { return _is_transient; }
+	//! Set transient flag
+	//! Don't use this outside of time patching
+	//! TODO: use special constructor instead?
+	void set_transient(bool t) { _is_transient = t; }
 
 	//!! Gets temporal tension
 	float get_temporal_tension()const { return time_tension; }

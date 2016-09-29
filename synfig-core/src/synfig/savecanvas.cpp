@@ -479,6 +479,9 @@ xmlpp::Element* encode_animated(xmlpp::Element* root,ValueNode_Animated::ConstHa
 	
 	for(iter=waypoint_list.begin();iter!=waypoint_list.end();++iter)
 	{
+		if (iter->is_transient()) {
+			continue;
+		}
 		xmlpp::Element *waypoint_node=root->add_child("waypoint");
 		waypoint_node->set_attribute("time",iter->get_time().get_string());
 

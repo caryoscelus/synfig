@@ -1122,6 +1122,21 @@ ValueNode_AnimatedInterfaceConst::erase_all()
 	}
 }
 
+void
+ValueNode_AnimatedInterfaceConst::cleanup_transient()
+{
+	printf("cleaning up\n");
+	remove_if(
+		editable_waypoint_list().begin(),
+		editable_waypoint_list().end(),
+		[](auto waypoint) -> bool {
+			printf("remove\n");
+			return waypoint.is_transient();
+		}
+	);
+	printf("end cleanup\n");
+}
+
 ValueNode_AnimatedInterfaceConst::WaypointList::iterator
 ValueNode_AnimatedInterfaceConst::add(const Waypoint &x)
 {

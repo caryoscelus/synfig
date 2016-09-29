@@ -146,6 +146,7 @@ Layer_TimePatch::update_children_patch()
 			if (param_animated)
 			{
 				printf("it's animated, yay!\n");
+				param_animated->cleanup_transient();
 				for (const auto &time_point : animated_time->waypoint_list())
 				{
 					Time time = time_point.get_value().get(Time());
@@ -158,6 +159,7 @@ Layer_TimePatch::update_children_patch()
 						new_waypoint.set_before(param_waypoint.get_before());
 						new_waypoint.set_after(param_waypoint.get_after());
 						new_waypoint.set_value(param_waypoint.get_value());
+						new_waypoint.set_transient(true);
 						param_animated->add(new_waypoint);
 					}
 				}

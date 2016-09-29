@@ -59,7 +59,8 @@ Waypoint::Waypoint(ValueBase value, Time time):
 	tension(0.0),
 	continuity(0.0),
 	bias(0),
-	time_tension(0.0f)
+	time_tension(0.0f),
+	_is_transient(false)
 {
 	//!Writeme
 	if(value.get_type()==type_angle)
@@ -75,7 +76,8 @@ Waypoint::Waypoint(etl::handle<ValueNode> value_node, Time time):
 	tension(0.0),
 	continuity(0),
 	bias(0),
-	time_tension(0.0f)
+	time_tension(0.0f),
+	_is_transient(false)
 {
 	if(value_node->get_type()==type_angle)
 		after=before=INTERPOLATION_LINEAR;
@@ -88,7 +90,8 @@ Waypoint::Waypoint():
 	tension(0),
 	continuity(0),
 	bias(0),
-	time_tension(0.0f)
+	time_tension(0.0f),
+	_is_transient(false)
 {
 }
 
