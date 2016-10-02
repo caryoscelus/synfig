@@ -47,6 +47,7 @@ class Layer_TimePatch : public Layer_Group
 private:
 	//! Parameter: (Patch) Patch
 	ValueBase param_time_patch;
+	bool unique_canvas = false;
 
 public:
 	//! Default constructor

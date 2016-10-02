@@ -182,6 +182,22 @@ Layer_TimePatch::get_param(const String& param)const
 void
 Layer_TimePatch::on_canvas_set()
 {
+	auto canvas = get_sub_canvas();
+	if (!canvas)
+	{
+		return;
+	}
+	// TODO: make sure we get unique canvas
+	if (!unique_canvas)
+	{
+		unique_canvas = true;
+		// TODO: make sure this works properly
+		const auto& new_canvas = canvas->clone();
+		set_sub_canvas(new_canvas);
+		canvas.detach();
+		return;
+	}
+	unique_canvas = false;
 	Layer_Group::on_canvas_set();
 	update_children_patch();
 }
