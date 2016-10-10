@@ -62,7 +62,26 @@ using namespace synfig;
 Time::Time(const String &str_, float fps):
 	value_(0)
 {
-	String str(str_);
+	String str;
+	
+	// Start by determining whether there's timeline
+	// timeline should precede other time markers and
+	// be put in parenthesis (e.g. "(default)12s")
+	if(str_[0] == '(')
+	{
+		auto bracket_pos = str_.find(")");
+		if(bracket_pos == String::npos)
+		{
+			synfig::warning(_("Time(): Can't parse time value: found '(', but not ')'"));
+			return;
+		}
+		timeline_ = str_.substr(1, bracket_pos-1);
+		str = str_.substr(bracket_pos);
+	}
+	else
+	{
+		str = str_;
+	}
 	std::transform(str.begin(),str.end(),str.begin(),&tolower);
 
 	// Start/Begin Of Time

@@ -39,7 +39,8 @@
 namespace synfig {
 
 /*!	\class Time
-**	\todo writeme
+**	Class representing time in Synfig.
+**	\todo Look into separating Time itself and format operations..
 **	\see TimeFormat, time_to_string(), string_to_time()
 */
 class Time
@@ -62,16 +63,22 @@ public:
 	}; // END of enum Format
 
 private:
-	value_type value_;
+	//! which time line this time position belongs to
+	String timeline_ = "";
+	value_type value_ = 0;
 
 	static value_type epsilon_() { return static_cast<value_type>(0.0005); }
 
 public:
-	Time(): value_() { }
+	Time() = default;
 
 	Time(const value_type &x):value_(x) { }
 
-	Time(int x):value_(x) { }
+	template <typename T>
+	Time(const T& x, const String& timeline):
+		value_(static_cast<value_type>(x)),
+		timeline_(timeline)
+	{ }
 
 	Time(int hour, int minute, float second):value_(static_cast<value_type>(second+hour*3600+minute*60)) { }
 
@@ -110,34 +117,25 @@ public:
 	//! Rounds time to the nearest frame for the given frame rate, \a fps
 	Time round(float fps)const;
 
-	bool is_equal(const Time& rhs)const { return (value_>rhs.value_)?value_-rhs.value_<=epsilon_():rhs.value_-value_<=epsilon_(); }
+	bool comparable(const Time& rhs)const { return timeline_ == rhs.timeline_; }
+	bool is_equal(const Time& rhs)const
+	{
+		if (!comparable(rhs)) {
+			return false;
+		}
+		return (value_>rhs.value_)?value_-rhs.value_<=epsilon_():rhs.value_-value_<=epsilon_();
+	}
 	bool is_less_than(const Time& rhs)const { return rhs.value_-value_ > epsilon_(); }
 	bool is_more_than(const Time& rhs)const { return value_-rhs.value_ > epsilon_(); }
 
 	operator double()const { return value_; }
 
-	template<typename U> bool operator<(const U& rhs)const { return value_<rhs; }
-	template<typename U> bool operator>(const U& rhs)const { return value_>rhs; }
-	template<typename U> bool operator<=(const U& rhs)const { return value_<=rhs; }
-	template<typename U> bool operator>=(const U& rhs)const { return value_>=rhs; }
-	template<typename U> bool operator==(const U& rhs)const { return value_==rhs; }
-	template<typename U> bool operator!=(const U& rhs)const { return value_!=rhs; }
-
-#if 0
-	bool operator<(const Time& rhs)const { return value_<rhs.value_; }
-	bool operator>(const Time& rhs)const { return value_>rhs.value_; }
-	bool operator<=(const Time& rhs)const { return value_<=rhs.value_; }
-	bool operator>=(const Time& rhs)const { return value_>=rhs.value_; }
-	bool operator==(const Time& rhs)const { return value_==rhs.value_; }
-	bool operator!=(const Time& rhs)const { return value_!=rhs.value_; }
-#else
 	bool operator<(const Time& rhs)const { return is_less_than(rhs); }
 	bool operator>(const Time& rhs)const { return is_more_than(rhs); }
 	bool operator<=(const Time& rhs)const { return is_less_than(rhs)||is_equal(rhs); }
 	bool operator>=(const Time& rhs)const { return is_more_than(rhs)||is_equal(rhs); }
 	bool operator==(const Time& rhs)const { return is_equal(rhs); }
 	bool operator!=(const Time& rhs)const { return !is_equal(rhs); }
-#endif
 
 	template<typename U> const Time& operator+=(const U &rhs) { value_+=static_cast<value_type>(rhs); return *this; }
 	template<typename U> const Time& operator-=(const U &rhs) { value_-=static_cast<value_type>(rhs); return *this; }

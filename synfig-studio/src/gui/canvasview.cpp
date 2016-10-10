@@ -2164,7 +2164,7 @@ CanvasView::refresh_rend_desc()
 	}
 
 	Time length(get_canvas()->rend_desc().get_time_end()-get_canvas()->rend_desc().get_time_start());
-	if(length<DEFAULT_TIME_WINDOW_SIZE)
+	if(length < (Time)DEFAULT_TIME_WINDOW_SIZE)
 	{
 		time_window_adjustment()->set_page_increment(length);
 		time_window_adjustment()->set_page_size(length);
@@ -2188,7 +2188,7 @@ CanvasView::refresh_rend_desc()
 	time_window_adjustment()->set_step_increment(synfig::Time(1.0/current_frame_rate));
 
 	//Time length(get_canvas()->rend_desc().get_time_end()-get_canvas()->rend_desc().get_time_start());
-	if(length < time_window_adjustment()->get_page_size())
+	if(length < (Time)time_window_adjustment()->get_page_size())
 	{
 		time_window_adjustment()->set_page_increment(length);
 		time_window_adjustment()->set_page_size(length);
@@ -2715,11 +2715,11 @@ CanvasView::on_time_changed()
 		current_time_widget->override_color(Gdk::RGBA(0));
 	}
 
-	if(get_time() != time_adjustment()->get_value())
+	if(get_time() != (Time)time_adjustment()->get_value())
 	{
 		//Recenters the window, causing it to jump (possibly undesirably... but whatever)
-		if(time < time_window_adjustment()->get_value() ||
-			time > time_window_adjustment()->get_value()+time_window_adjustment()->get_page_size())
+		if(time < (Time)time_window_adjustment()->get_value() ||
+			time > (Time)time_window_adjustment()->get_value()+time_window_adjustment()->get_page_size())
 		{
 			time_window_adjustment()->set_value(
 				time-time_window_adjustment()->get_page_size()/2

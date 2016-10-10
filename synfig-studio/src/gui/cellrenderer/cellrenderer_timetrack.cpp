@@ -304,7 +304,7 @@ CellRenderer_TimeTrack::render_vfunc(
 				continue;
 
 			const int x((int)((float)cell_area.get_width()/(adjustment->get_upper()-adjustment->get_lower())*(iter->get_time()-adjustment->get_lower())));
-			if(iter->get_time()>=adjustment->get_lower() && iter->get_time()<adjustment->get_upper())
+			if(iter->get_time() >= (Time)adjustment->get_lower() && iter->get_time() < (Time)adjustment->get_upper())
 			{
 				cr->set_source_rgb(keyframe_color.get_red_p(), keyframe_color.get_green_p(), keyframe_color.get_blue_p());
 				cr->rectangle(cell_area.get_x()+x, cell_area.get_y(), 1, cell_area.get_height()+1);
@@ -329,9 +329,9 @@ CellRenderer_TimeTrack::render_vfunc(
 			Time t_orig = *i;
 			if(!t_orig.is_valid()) continue;
 			Time t = t_orig - time_offset;
-			if (time_dilation!=0)
+			if (time_dilation != (Time)0)
 				t = t / time_dilation;
-			if(t<adjustment->get_lower() || t>adjustment->get_upper()) continue;
+			if(t < (Time)adjustment->get_lower() || t > (Time)adjustment->get_upper()) continue;
 
 			const int w = 1;
 			const int h = (area.get_height() - 2)/2;
@@ -367,9 +367,9 @@ CellRenderer_TimeTrack::render_vfunc(
 				Time t_orig = i->get_time();
 				if(!t_orig.is_valid()) continue;
 				Time t = t_orig - time_offset;
-				if (time_dilation!=0)
+				if (time_dilation != (Time)0)
 					t = t / time_dilation;
-				if(t<adjustment->get_lower() || t>adjustment->get_upper()) continue;
+				if(t < (Time)adjustment->get_lower() || t > (Time)adjustment->get_upper()) continue;
 
 				//if it found it... (might want to change comparison, and optimize
 				//					 sel_times.find to not produce an overall nlogn solution)
@@ -410,7 +410,7 @@ CellRenderer_TimeTrack::render_vfunc(
 					area.get_height()-2,
 					area.get_height()-2
 				);
-				if (time_dilation!=0)
+				if (time_dilation != (Time)0)
 				{
 					TimePoint tp = *i;
 					tp.set_time((tp.get_time() - time_offset) / time_dilation);
@@ -493,7 +493,7 @@ CellRenderer_TimeTrack::render_vfunc(
 				is_off=false;
 			}
 
-			if(iter->time>=adjustment->get_lower() && iter->time<adjustment->get_upper())
+			if(iter->time >= (Time)adjustment->get_lower() && iter->time < (Time)adjustment->get_upper())
 			{
 				int w(1);
 				if(selected==*iter)

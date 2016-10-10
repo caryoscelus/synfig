@@ -275,9 +275,9 @@ KeyframeTreeStore::time_sorter(const Gtk::TreeModel::iterator &rhs,const Gtk::Tr
 	_keyframe_iterator *lhs_iter(static_cast<_keyframe_iterator*>(lhs->gobj()->user_data));
 
 	Time diff(rhs_iter->iter->get_time()-lhs_iter->iter->get_time());
-	if(diff<0)
+	if(diff<(Time)0)
 		return -1;
-	if(diff>0)
+	if(diff>(Time)0)
 		return 1;
 	return 0;
 }

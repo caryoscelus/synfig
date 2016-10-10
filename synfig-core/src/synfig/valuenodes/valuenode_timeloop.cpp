@@ -123,9 +123,9 @@ ValueNode_TimeLoop::operator()(Time t)const
 	Time local_time = (*local_time_)(t).get(Time());
 	Time duration   = (*duration_)  (t).get(Time());
 
- 	if (duration == 0)
+	if (duration == (Time)0)
 		t = link_time;
-	else if (duration > 0)
+	else if (duration > (Time)0)
 	{
 		t -= local_time;
 		t -= floor(t / duration) * duration;

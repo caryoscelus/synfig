@@ -134,7 +134,7 @@ Action::KeyframeSetDelta::prepare()
 			if(!action->is_ready())
 				throw Error(Error::TYPE_NOTREADY);
 
-			if (delta > 0) add_action_front(action); else add_action(action);
+			if (delta > (Time)0) add_action_front(action); else add_action(action);
 		}
 	}
 }

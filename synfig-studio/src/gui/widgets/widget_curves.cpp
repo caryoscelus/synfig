@@ -543,7 +543,7 @@ Widget_Curves::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
 				continue;
 
 			const int x((int)((float)w/(t_end-t_begin)*(iter->get_time()-t_begin)));
-			if(iter->get_time()>=t_begin && iter->get_time()<t_end)
+			if(iter->get_time() >= (Time)t_begin && iter->get_time() < (Time)t_end)
 			{
 				cr->set_source_rgb(0.63, 0.5, 0.5);
 				cr->rectangle(x, 0, 1, h);

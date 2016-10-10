@@ -256,14 +256,14 @@ Layer_TimeLoop::set_time_vfunc(IndependentContext context, Time t)const
 	
 	Time time = t;
 	float document_fps=get_canvas()->rend_desc().get_frame_rate();
-	if (!only_for_positive_duration || duration > 0)
+	if (!only_for_positive_duration || duration > (Time)0)
 	{
-		if (duration == 0)
+		if (duration == (Time)0)
 			t = link_time;
 		else {
 			float t_frames = round(t*document_fps);
 			float duration_frames = round(duration*document_fps);
-			if (duration > 0)
+			if (duration > (Time)0)
 			{
 				t -= local_time;
 				// Simple formula looks like this:
