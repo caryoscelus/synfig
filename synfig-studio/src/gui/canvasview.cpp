@@ -3276,7 +3276,7 @@ CanvasView::on_play_timeout()
 #ifdef WITH_JACK
 		jack_position_t pos;
 		jack_transport_query(jack_client, &pos);
-		jack_time = Time((Time::value_type)pos.frame/(Time::value_type)pos.frame_rate);
+		jack_time = Time((TimeDiff)pos.frame/(TimeDiff)pos.frame_rate);
 		time = jack_time - get_jack_offset();
 		if (time > endtime) time = endtime;
 		if (time < starttime) time = starttime;
@@ -4528,7 +4528,7 @@ CanvasView::on_jack_sync()
 	jack_transport_state_t state = jack_transport_query(jack_client, &pos);
 
 	jack_is_playing = state == JackTransportRolling || state == JackTransportStarting;
-	jack_time = Time((Time::value_type)pos.frame/(Time::value_type)pos.frame_rate);
+	jack_time = Time((TimeDiff)pos.frame/(TimeDiff)pos.frame_rate);
 
 	if (is_playing() != jack_is_playing)
 	{

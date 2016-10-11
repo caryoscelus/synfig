@@ -30,6 +30,9 @@
 
 #include "string.h"
 
+#include <limits>
+#include <cmath>
+
 /* === M A C R O S ========================================================= */
 
 /* === T Y P E D E F S ===================================================== */
@@ -37,6 +40,9 @@
 /* === C L A S S E S & S T R U C T S ======================================= */
 
 namespace synfig {
+
+//! Time amount / difference
+typedef double TimeDiff;
 
 /*!	\class Time
 **	Class representing time in Synfig.
@@ -46,8 +52,6 @@ namespace synfig {
 class Time
 {
 public:
-	typedef double value_type;
-
 	/*!	\enum Format
 	**	\todo writeme
 	**	\see Time, get_string() */
@@ -65,22 +69,22 @@ public:
 private:
 	//! which time line this time position belongs to
 	String timeline_ = "";
-	value_type value_ = 0;
+	TimeDiff value_ = 0;
 
-	static value_type epsilon_() { return static_cast<value_type>(0.0005); }
+	static TimeDiff epsilon_() { return std::numeric_limits<TimeDiff>::epsilon()*8; }
 
 public:
 	Time() = default;
 
-	Time(const value_type &x):value_(x) { }
+	Time(const TimeDiff &x):value_(x) { }
 
 	template <typename T>
 	Time(const T& x, const String& timeline):
-		value_(static_cast<value_type>(x)),
+		value_(static_cast<TimeDiff>(x)),
 		timeline_(timeline)
 	{ }
 
-	Time(int hour, int minute, float second):value_(static_cast<value_type>(second+hour*3600+minute*60)) { }
+	Time(int hour, int minute, float second):value_(static_cast<TimeDiff>(second+hour*3600+minute*60)) { }
 
 	//! Constructs Time from the given string.
 	/*!	\note If the string references frames, then the
@@ -123,7 +127,9 @@ public:
 		if (!comparable(rhs)) {
 			return false;
 		}
-		return (value_>rhs.value_)?value_-rhs.value_<=epsilon_():rhs.value_-value_<=epsilon_();
+		return
+			value_ == rhs.value_ ||
+			std::abs((double)value_-rhs.value_) < epsilon_();
 	}
 	bool is_less_than(const Time& rhs)const { return rhs.value_-value_ > epsilon_(); }
 	bool is_more_than(const Time& rhs)const { return value_-rhs.value_ > epsilon_(); }
@@ -137,15 +143,15 @@ public:
 	bool operator==(const Time& rhs)const { return is_equal(rhs); }
 	bool operator!=(const Time& rhs)const { return !is_equal(rhs); }
 
-	template<typename U> const Time& operator+=(const U &rhs) { value_+=static_cast<value_type>(rhs); return *this; }
-	template<typename U> const Time& operator-=(const U &rhs) { value_-=static_cast<value_type>(rhs); return *this; }
-	template<typename U> const Time& operator*=(const U &rhs) { value_*=static_cast<value_type>(rhs); return *this; }
-	template<typename U> const Time& operator/=(const U &rhs) { value_/=static_cast<value_type>(rhs); return *this; }
+	template<typename U> const Time& operator+=(const U &rhs) { value_+=static_cast<TimeDiff>(rhs); return *this; }
+	template<typename U> const Time& operator-=(const U &rhs) { value_-=static_cast<TimeDiff>(rhs); return *this; }
+	template<typename U> const Time& operator*=(const U &rhs) { value_*=static_cast<TimeDiff>(rhs); return *this; }
+	template<typename U> const Time& operator/=(const U &rhs) { value_/=static_cast<TimeDiff>(rhs); return *this; }
 
-	template<typename U> Time operator+(const U &rhs)const { return value_+static_cast<value_type>(rhs); }
-	template<typename U> Time operator-(const U &rhs)const { return value_-static_cast<value_type>(rhs); }
-	template<typename U> Time operator*(const U &rhs)const { return value_*static_cast<value_type>(rhs); }
-	template<typename U> Time operator/(const U &rhs)const { return value_/static_cast<value_type>(rhs); }
+	template<typename U> Time operator+(const U &rhs)const { return value_+static_cast<TimeDiff>(rhs); }
+	template<typename U> Time operator-(const U &rhs)const { return value_-static_cast<TimeDiff>(rhs); }
+	template<typename U> Time operator*(const U &rhs)const { return value_*static_cast<TimeDiff>(rhs); }
+	template<typename U> Time operator/(const U &rhs)const { return value_/static_cast<TimeDiff>(rhs); }
 
 	Time operator-()const { return -value_; }
 }; // END of class Time

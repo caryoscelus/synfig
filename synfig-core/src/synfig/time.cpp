@@ -303,7 +303,7 @@ Time::round(float fps)const
 {
 	assert(fps>0);
 
-	value_type time(*this);
+	TimeDiff time(*this);
 
 	time*=fps;
 

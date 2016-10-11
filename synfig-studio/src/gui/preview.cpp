@@ -881,7 +881,7 @@ bool studio::Widget_Preview::play_update()
 			jack_transport_state_t state = jack_transport_query(jack_client, &pos);
 			if (state != JackTransportRolling && state != JackTransportStarting)
 				{ on_jack_sync(); return true; }
-			jack_time = Time((Time::value_type)pos.frame/(Time::value_type)pos.frame_rate);
+			jack_time = Time((TimeDiff)pos.frame/(TimeDiff)pos.frame_rate);
 			time = jack_time - jack_offset;
 			stop_on_end = false;
 #endif
@@ -1465,7 +1465,7 @@ void Widget_Preview::on_jack_sync() {
 	jack_transport_state_t state = jack_transport_query(jack_client, &pos);
 
 	jack_is_playing = state == JackTransportRolling || state == JackTransportStarting;
-	jack_time = Time((Time::value_type)pos.frame/(Time::value_type)pos.frame_rate);
+	jack_time = Time((TimeDiff)pos.frame/(TimeDiff)pos.frame_rate);
 
 	if (playing != jack_is_playing)
 	{
