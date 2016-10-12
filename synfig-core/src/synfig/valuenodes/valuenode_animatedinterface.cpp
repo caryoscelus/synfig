@@ -1219,15 +1219,7 @@ ValueNode_AnimatedInterfaceConst::find_uid(const UniqueID &x)
 ValueNode_AnimatedInterfaceConst::const_findresult
 ValueNode_AnimatedInterfaceConst::find_uid(const UniqueID &x)const
 {
- 	const_findresult	f;
- 	f.second = false;
-
- 	//search for it... and set the bool part of the return value to true if we found it!
- 	f.first = std::find(waypoint_list_.begin(), waypoint_list_.end(), x);
- 	if(f.first != waypoint_list_.end())
- 		f.second = true;
-
- 	return f;
+	return find_uid(x);
 }
 
 ValueNode_AnimatedInterfaceConst::findresult
@@ -1247,15 +1239,7 @@ ValueNode_AnimatedInterfaceConst::find_time(const Time &x)
 ValueNode_AnimatedInterfaceConst::const_findresult
 ValueNode_AnimatedInterfaceConst::find_time(const Time &x)const
 {
- 	const_findresult	f;
- 	f.second = false;
-
- 	//search for it... and set the bool part of the return value to true if we found it!
- 	f.first = std::find_if(waypoint_list_.begin(), waypoint_list_.end(), timecmp(x));
- 	if(f.first != waypoint_list_.end())
- 		f.second = true;
-
- 	return f;
+	return find_time(x);
 }
 
 void
