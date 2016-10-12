@@ -131,8 +131,18 @@ public:
 			value_ == rhs.value_ ||
 			std::abs((double)value_-rhs.value_) < epsilon_();
 	}
-	bool is_less_than(const Time& rhs)const { return rhs.value_-value_ > epsilon_(); }
-	bool is_more_than(const Time& rhs)const { return value_-rhs.value_ > epsilon_(); }
+	bool is_less_than(const Time& rhs)const {
+		if (!comparable(rhs)) {
+			return timeline_ < rhs.timeline_;
+		}
+		return rhs.value_-value_ > epsilon_();
+	}
+	bool is_more_than(const Time& rhs)const {
+		if (!comparable(rhs)) {
+			return timeline_ > rhs.timeline_;
+		}
+		return value_-rhs.value_ > epsilon_();
+	}
 
 	operator double()const { return value_; }
 

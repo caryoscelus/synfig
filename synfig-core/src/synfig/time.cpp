@@ -224,6 +224,8 @@ Time::get_string(float fps, Time::Format format)const
 	String ret;
 	bool started = false;
 
+	ret += "("+timeline_+")";
+
 	if(format<=FORMAT_FULL || hour)
 	{
 		ret+=strprintf("%dh",hour);
