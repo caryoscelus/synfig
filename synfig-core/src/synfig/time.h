@@ -107,6 +107,8 @@ public:
 	//! The amount of allowable error in calculations
 	static const Time epsilon() { return static_cast<synfig::Time>(epsilon_()); }
 
+	const String& get_timeline() const { return timeline_; }
+
 	//! Returns a string describing the current time value
 	/*!	\see Format */
 	String get_string(float fps=0, Time::Format format=FORMAT_NORMAL)const;
