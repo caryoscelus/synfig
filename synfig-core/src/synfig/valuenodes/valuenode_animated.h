@@ -65,10 +65,8 @@ public:
 	virtual ValueBase operator()(Time t) const;
 	virtual void get_values_vfunc(std::map<Time, ValueBase> &x) const;
 
-	virtual Interpolation get_interpolation()const
-		{ return ValueNode_AnimatedInterfaceConst::get_interpolation(); }
-	virtual void set_interpolation(Interpolation i)
-		{ ValueNode_AnimatedInterfaceConst::set_interpolation(i); }
+	using ValueNode_AnimatedInterface::get_interpolation;
+	using ValueNode_AnimatedInterface::set_interpolation;
 
 protected:
 	ValueNode_Animated(Type &type);
