@@ -216,7 +216,7 @@ Action::KeyframeSet::scale_waypoints(const synfigapp::ValueDesc& value_desc,cons
 	std::vector<Waypoint*> selected;
 	std::vector<Waypoint*>::iterator iter;
 
-	if(value_node->find(old_begin,old_end,selected))
+	if(value_node->collect_waypoints(old_begin,old_end,selected))
 	{
 		// check to make sure this operation is OK
 		for(iter=selected.begin();iter!=selected.end();++iter)

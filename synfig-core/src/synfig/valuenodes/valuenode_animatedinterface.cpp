@@ -864,7 +864,7 @@ ValueNode_AnimatedInterfaceConst::ValueNode_AnimatedInterfaceConst(ValueNode &no
 }
 
 int
-ValueNode_AnimatedInterfaceConst::find(const Time& begin, const Time& end, std::vector<Waypoint*>& selected)
+ValueNode_AnimatedInterfaceConst::collect_waypoints(const Time& begin, const Time& end, std::vector<Waypoint*>& selected)
 {
 	Time curr_time(begin);
 	int ret(0);
@@ -898,7 +898,7 @@ ValueNode_AnimatedInterfaceConst::find(const Time& begin, const Time& end, std::
 }
 
 int
-ValueNode_AnimatedInterfaceConst::find(const Time& begin, const Time& end, std::vector<const Waypoint*>& selected) const
+ValueNode_AnimatedInterfaceConst::collect_waypoints(const Time& begin, const Time& end, std::vector<const Waypoint*>& selected) const
 {
 	Time curr_time(begin);
 	int ret(0);

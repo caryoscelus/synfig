@@ -111,7 +111,7 @@ protected:
 	//! Finds previous Waypoint at a given time \x starting from current waypoint
 	WaypointList::iterator find_prev(const Time &x);
 	//! Fills the \list with the waypoints between \begin and \end
-	int find(const Time& begin, const Time& end, std::vector<Waypoint*>& list);
+	int collect_waypoints(const Time& begin, const Time& end, std::vector<Waypoint*>& list);
 
 	void set_type(Type &t);
 
@@ -148,7 +148,7 @@ public:
 	//! Finds previous Waypoint at a given time \x starting from current waypoint
 	WaypointList::const_iterator find_prev(const Time &x)const;
 	//! Fills the \list with the waypoints between \begin and \end
-	int find(const Time& begin, const Time& end, std::vector<const Waypoint*>& list) const;
+	int collect_waypoints(const Time& begin, const Time& end, std::vector<const Waypoint*>& list) const;
 };
 
 class ValueNode_AnimatedInterface: public ValueNode_AnimatedInterfaceConst
@@ -170,6 +170,8 @@ public:
 	using ValueNode_AnimatedInterfaceConst::find;
 	using ValueNode_AnimatedInterfaceConst::find_next;
 	using ValueNode_AnimatedInterfaceConst::find_prev;
+
+	using ValueNode_AnimatedInterfaceConst::collect_waypoints;
 };
 
 
