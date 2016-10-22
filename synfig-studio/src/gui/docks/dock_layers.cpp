@@ -45,7 +45,6 @@
 #include "trees/layertree.h"
 #include "canvasview.h"
 #include "actionmanagers/layeractionmanager.h"
-//#include <ETL/ref_count>
 
 #include <gui/localization.h>
 
@@ -63,11 +62,6 @@ using namespace studio;
 /* === G L O B A L S ======================================================= */
 
 /* === P R O C E D U R E S ================================================= */
-
-/*static void do_nothing(reference_counter x)
-{
-	synfig::info(__FILE__":%d:ref_count.count()=%d",__LINE__,x.count());
-}*/
 
 /* === M E T H O D S ======================================================= */
 
