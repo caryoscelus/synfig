@@ -856,7 +856,7 @@ public:
 /* === M E T H O D S ======================================================= */
 
 ValueNode_AnimatedInterfaceConst::ValueNode_AnimatedInterfaceConst(ValueNode &node):
-	ValueNode_Interface(node),
+	AnimatedInterface(node),
 	interpolation_(INTERPOLATION_UNDEFINED),
 	interpolator_(NULL)
 {
@@ -1276,4 +1276,16 @@ ValueNode_AnimatedInterfaceConst::get_times_vfunc(Node::time_set &set) const
 		t.set_guid(i->get_guid());
 		set.insert(t);
 	}
+}
+
+ValueNode_AnimatedInterfaceConst::WRange
+ValueNode_AnimatedInterfaceConst::get_all()
+{
+	return boost::iterator_range<WaypointList::iterator>(begin(editable_waypoint_list()), end(editable_waypoint_list()));
+}
+
+ValueNode_AnimatedInterfaceConst::WRange
+ValueNode_AnimatedInterfaceConst::get_timeline(const String& timeline)
+{
+	return get_all();
 }

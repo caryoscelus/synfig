@@ -34,6 +34,8 @@
 #include <synfig/uniqueid.h>
 #include <synfig/waypoint.h>
 
+#include "valuenode_minimalanimatedinterface.h"
+
 /* === M A C R O S ========================================================= */
 
 /* === C L A S S E S & S T R U C T S ======================================= */
@@ -51,7 +53,7 @@ namespace synfig {
  * a value node. They must be redefined by the inherited classes and will
  * be different depending on the type of value being animated.
 */
-class ValueNode_AnimatedInterfaceConst: public ValueNode_Interface
+class ValueNode_AnimatedInterfaceConst: public valuenodes::AnimatedInterface<synfig::WaypointList::iterator, synfig::WaypointList::iterator>
 {
 private:
 	class Internal;
@@ -149,6 +151,11 @@ public:
 	WaypointList::const_iterator find_prev(const Time &x)const;
 	//! Fills the \list with the waypoints between \begin and \end
 	int collect_waypoints(const Time& begin, const Time& end, std::vector<const Waypoint*>& list) const;
+
+protected:
+	// Implement new animated interface
+	WRange get_all();
+	WRange get_timeline(const String& timeline);
 };
 
 class ValueNode_AnimatedInterface: public ValueNode_AnimatedInterfaceConst

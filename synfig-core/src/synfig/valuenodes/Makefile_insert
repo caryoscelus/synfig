@@ -28,6 +28,7 @@ VALUENODES_HH = \
 	valuenodes/valuenode_join.h \
 	valuenodes/valuenode_linear.h \
 	valuenodes/valuenode_log.h \
+	valuenodes/valuenode_minimalanimatedinterface.h \
 	valuenodes/valuenode_not.h \
 	valuenodes/valuenode_or.h \
 	valuenodes/valuenode_pow.h \
