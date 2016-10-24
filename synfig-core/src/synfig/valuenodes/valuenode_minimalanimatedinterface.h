@@ -32,10 +32,26 @@
 
 #include <boost/optional.hpp>
 #include <boost/range/iterator_range.hpp>
+#include <boost/range/algorithm/find.hpp>
+#include <boost/range/algorithm/find_if.hpp>
 
 /* === C L A S S E S & S T R U C T S ======================================= */
 
 namespace synfig {
+
+namespace temp_iter {
+
+template <class Iter>
+boost::optional<Iter> optional_iter(boost::iterator_range<Iter> range, Iter iter)
+{
+	if (iter == end(range))
+		return boost::none;
+	else
+		return boost::make_optional(iter);
+}
+
+};
+
 namespace valuenodes {
 
 /*! \class AnimatedInterface
@@ -48,7 +64,7 @@ template <class WPointer, class WIterator>
 class AnimatedInterface : public synfig::ValueNode_Interface
 {
 public:
-	typedef boost::iterator_range<WIterator> WRange;
+	using WRange = boost::iterator_range<WIterator>;
 
 protected:
 	virtual WRange get_all() = 0;
@@ -65,13 +81,21 @@ public:
 	//! Find waypoint by its UID
 	GET_WP get_by_uid(const UniqueID& uid)
 	{
-		return boost::none;
+		auto range = get_all();
+		auto iter = boost::find(range, uid);
+		return temp_iter::optional_iter(range, iter);
 	}
 
 	//! Find waypoint exactly at `time`
 	GET_WP at_time(const Time& time)
 	{
-		return boost::none;
+		// this is not an effective algo
+		// TODO: optional sorting
+		auto range = get_timeline(time.get_timeline());
+		auto iter = boost::find_if(range, [time](auto const& waypoint) {
+			return waypoint.get_time() == time;
+		});
+		return temp_iter::optional_iter(range, iter);
 	}
 
 	//! Find waypoint before `time`

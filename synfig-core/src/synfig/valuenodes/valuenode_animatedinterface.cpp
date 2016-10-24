@@ -857,6 +857,7 @@ public:
 
 ValueNode_AnimatedInterfaceConst::ValueNode_AnimatedInterfaceConst(ValueNode &node):
 	AnimatedInterface(node),
+// 	ValueNode_Interface(node),
 	interpolation_(INTERPOLATION_UNDEFINED),
 	interpolator_(NULL)
 {
@@ -1205,15 +1206,16 @@ ValueNode_AnimatedInterfaceConst::~ValueNode_AnimatedInterfaceConst()
 ValueNode_AnimatedInterfaceConst::findresult
 ValueNode_AnimatedInterfaceConst::find_uid(const UniqueID &x)
 {
- 	findresult	f;
- 	f.second = false;
-
- 	//search for it... and set the bool part of the return value to true if we found it!
- 	f.first = std::find(waypoint_list_.begin(), waypoint_list_.end(), x);
- 	if(f.first != waypoint_list_.end())
- 		f.second = true;
-
- 	return f;
+//  	findresult	f;
+//  	f.second = false;
+//
+//  	//search for it... and set the bool part of the return value to true if we found it!
+//  	f.first = std::find(waypoint_list_.begin(), waypoint_list_.end(), x);
+//  	if(f.first != waypoint_list_.end())
+//  		f.second = true;
+//
+//  	return f;
+	return optional_to_findresult(get_by_uid(x));
 }
 
 ValueNode_AnimatedInterfaceConst::const_findresult
@@ -1225,15 +1227,16 @@ ValueNode_AnimatedInterfaceConst::find_uid(const UniqueID &x)const
 ValueNode_AnimatedInterfaceConst::findresult
 ValueNode_AnimatedInterfaceConst::find_time(const Time &x)
 {
- 	findresult	f;
- 	f.second = false;
-
- 	//search for it... and set the bool part of the return value to true if we found it!
- 	f.first = std::find_if(waypoint_list_.begin(), waypoint_list_.end(), timecmp(x));
- 	if(f.first != waypoint_list_.end())
- 		f.second = true;
-
- 	return f;
+//  	findresult	f;
+//  	f.second = false;
+//
+//  	//search for it... and set the bool part of the return value to true if we found it!
+//  	f.first = std::find_if(waypoint_list_.begin(), waypoint_list_.end(), timecmp(x));
+//  	if(f.first != waypoint_list_.end())
+//  		f.second = true;
+//
+//  	return f;
+	return optional_to_findresult(at_time(x));
 }
 
 ValueNode_AnimatedInterfaceConst::const_findresult
