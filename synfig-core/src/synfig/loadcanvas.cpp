@@ -1789,7 +1789,7 @@ CanvasParser::parse_animated(xmlpp::Element *element,Canvas::Handle canvas)
 
 
 			try {
-				ValueNode_Animated::WaypointList::iterator waypoint=value_node->new_waypoint(time,waypoint_value_node);
+				auto waypoint=value_node->new_waypoint(time,waypoint_value_node);
 
 			if(child->get_attribute("tension"))
 			{
