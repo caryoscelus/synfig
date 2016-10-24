@@ -1007,12 +1007,19 @@ ValueNode_AnimatedInterfaceConst::new_waypoint_at_time(const Time& time)const
 ValueNode_AnimatedInterfaceConst::WaypointList::iterator
 ValueNode_AnimatedInterfaceConst::find(const UniqueID &x)
 {
+	ValueNode_AnimatedInterfaceConst::WaypointList::iterator iter;
+	iter=std::find(editable_waypoint_list().begin(),editable_waypoint_list().end(),x);
+	if(iter==editable_waypoint_list().end() || iter->get_uid()!=x.get_uid())
+		throw Exception::NotFound(strprintf("ValueNode_AnimatedInterfaceConst::find(): Can't find UniqueID %d",x.get_uid()));
+	return iter;
+	/*
 	auto maybe_iter = get_by_uid(x);
 
 	if (maybe_iter.is_initialized())
 		return *maybe_iter;
 
 	throw Exception::NotFound(strprintf("ValueNode_AnimatedInterfaceConst::find(): Can't find UniqueID %d",x.get_uid()));
+	*/
 }
 
 ValueNode_AnimatedInterfaceConst::WaypointList::const_iterator
@@ -1024,10 +1031,13 @@ ValueNode_AnimatedInterfaceConst::find(const UniqueID &x)const
 ValueNode_AnimatedInterfaceConst::WaypointList::iterator
 ValueNode_AnimatedInterfaceConst::find(const Time &x)
 {
-	auto maybe_iter = at_time(x);
+	WaypointList::iterator iter(binary_find(editable_waypoint_list().begin(),editable_waypoint_list().end(),x));
+// 	auto maybe_iter = at_time(x);
 
-	if (maybe_iter.is_initialized())
-		return *maybe_iter;
+	if(iter!=editable_waypoint_list().end() && x.is_equal(iter->get_time()))
+		return iter;
+// 	if (maybe_iter.is_initialized())
+// 		return *maybe_iter;
 
 	throw Exception::NotFound(strprintf("ValueNode_AnimatedInterfaceConst::find(): Can't find Waypoint at %s",x.get_string().c_str()));
 }
@@ -1207,7 +1217,15 @@ ValueNode_AnimatedInterfaceConst::~ValueNode_AnimatedInterfaceConst()
 ValueNode_AnimatedInterfaceConst::findresult
 ValueNode_AnimatedInterfaceConst::find_uid(const UniqueID &x)
 {
-	return optional_to_findresult(get_by_uid(x));
+	findresult f;
+	f.second = false;
+
+	//search for it... and set the bool part of the return value to true if we found it!
+	f.first = std::find(waypoint_list_.begin(), waypoint_list_.end(), x);
+	if(f.first != waypoint_list_.end())
+		f.second = true;
+
+	return f;
 }
 
 ValueNode_AnimatedInterfaceConst::const_findresult
@@ -1219,7 +1237,15 @@ ValueNode_AnimatedInterfaceConst::find_uid(const UniqueID &x)const
 ValueNode_AnimatedInterfaceConst::findresult
 ValueNode_AnimatedInterfaceConst::find_time(const Time &x)
 {
-	return optional_to_findresult(at_time(x));
+	findresult      f;
+	f.second = false;
+
+	//search for it... and set the bool part of the return value to true if we found it!
+	f.first = std::find_if(waypoint_list_.begin(), waypoint_list_.end(), timecmp(x));
+	if(f.first != waypoint_list_.end())
+		f.second = true;
+
+	return f;
 }
 
 ValueNode_AnimatedInterfaceConst::const_findresult
@@ -1276,13 +1302,13 @@ ValueNode_AnimatedInterfaceConst::no_waypoint_at_time(const Time& t)
 	catch(Exception::NotFound) { };
 }
 
-ValueNode_AnimatedInterfaceConst::WRange
+ValueNode_AnimatedInterfaceConst::Range
 ValueNode_AnimatedInterfaceConst::get_all()
 {
 	return boost::iterator_range<WaypointList::iterator>(begin(editable_waypoint_list()), end(editable_waypoint_list()));
 }
 
-ValueNode_AnimatedInterfaceConst::WRange
+ValueNode_AnimatedInterfaceConst::Range
 ValueNode_AnimatedInterfaceConst::get_timeline(const String& timeline)
 {
 	return get_all();

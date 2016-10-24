@@ -53,7 +53,7 @@ namespace synfig {
  * a value node. They must be redefined by the inherited classes and will
  * be different depending on the type of value being animated.
 */
-class ValueNode_AnimatedInterfaceConst: public  valuenodes::AnimatedInterface<synfig::WaypointList::iterator, synfig::WaypointList::iterator> //ValueNode_Interface
+class ValueNode_AnimatedInterfaceConst: public  valuenodes::AnimatedInterface
 {
 private:
 	class Internal;
@@ -157,15 +157,15 @@ public:
 
 protected:
 	// Implement new animated interface
-	WRange get_all();
-	WRange get_timeline(const String& timeline);
+	Range get_all();
+	Range get_timeline(const String& timeline);
 
-	findresult optional_to_findresult(boost::optional<WaypointList::iterator> result) {
-		findresult f;
-		f.second = result.is_initialized();
-		f.first = result.get_value_or(end(get_all()));
-		return f;
-	}
+// 	findresult optional_to_findresult(boost::optional<WaypointList::iterator> result) {
+// 		findresult f;
+// 		f.second = result.is_initialized();
+// 		f.first = result.get_value_or(boost::end(get_all()));
+// 		return f;
+// 	}
 };
 
 class ValueNode_AnimatedInterface: public ValueNode_AnimatedInterfaceConst

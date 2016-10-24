@@ -53,5 +53,35 @@ AnimatedInterface::at_time(const Time& time)
 	return temp_iter::optional_iter(range, iter);
 }
 
-// MaybeIter
+AnimatedInterface::MaybeIter
+AnimatedInterface::before_time(const Time& time)
+{
+	return boost::none;
+}
 
+AnimatedInterface::MaybeIter
+AnimatedInterface::after_time(const Time& time)
+{
+	return boost::none;
+}
+
+AnimatedInterface::MaybeIter
+AnimatedInterface::add_waypoint(const Time& time)
+{
+	return boost::none;
+}
+
+void
+AnimatedInterface::clear_timeline(const String& timeline)
+{
+}
+
+void
+AnimatedInterface::remove_waypoint(const UniqueID& uid)
+{
+}
+
+void
+AnimatedInterface::apply_function(void f(Iter waypoint))
+{
+}
