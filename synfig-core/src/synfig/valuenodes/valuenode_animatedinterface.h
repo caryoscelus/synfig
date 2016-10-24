@@ -152,6 +152,9 @@ public:
 	//! Fills the \list with the waypoints between \begin and \end
 	int collect_waypoints(const Time& begin, const Time& end, std::vector<const Waypoint*>& list) const;
 
+	//! raise exception if waypoint exist at specified time
+	void no_waypoint_at_time(const Time& time);
+
 protected:
 	// Implement new animated interface
 	WRange get_all();
