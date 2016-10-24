@@ -34,6 +34,7 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/algorithm/find.hpp>
 #include <boost/range/algorithm/find_if.hpp>
+#include <boost/range/any_range.hpp>
 
 /* === C L A S S E S & S T R U C T S ======================================= */
 
@@ -44,7 +45,7 @@ namespace temp_iter {
 template <class Iter>
 boost::optional<Iter> optional_iter(boost::iterator_range<Iter> range, Iter iter)
 {
-	if (iter == end(range))
+	if (iter == boost::end(range))
 		return boost::none;
 	else
 		return boost::make_optional(iter);
@@ -60,79 +61,45 @@ namespace valuenodes {
  * The interface lets you find, add, remove and change waypoints.
  * It is aware of multiple timelines
  */
-template <class WPointer, class WIterator>
 class AnimatedInterface : public synfig::ValueNode_Interface
 {
 public:
-	using WRange = boost::iterator_range<WIterator>;
+	using Range = boost::any_range<Waypoint, boost::forward_traversal_tag, Waypoint&, std::ptrdiff_t>;
+	using Iter = Range::iterator;
+	using MaybeIter = boost::optional<Iter>;
 
 protected:
-	virtual WRange get_all() = 0;
-	virtual WRange get_timeline(const String& timeline) = 0;
+	virtual Range get_all() = 0;
+	virtual Range get_timeline(const String& timeline) = 0;
 
 public:
 	// Waypoint search functions
 	// All of them return optional waypoint pointer
-#define ANIMATED_INTERFACE_GET_WAYPOINT virtual boost::optional<WPointer>
-#ifdef GET_WP
-#error "GET_WP was already defined"
-#endif
-#define GET_WP ANIMATED_INTERFACE_GET_WAYPOINT
 	//! Find waypoint by its UID
-	GET_WP get_by_uid(const UniqueID& uid)
-	{
-		auto range = get_all();
-		auto iter = boost::find(range, uid);
-		return temp_iter::optional_iter(range, iter);
-	}
+	virtual MaybeIter get_by_uid(const UniqueID& uid);
 
 	//! Find waypoint exactly at `time`
-	GET_WP at_time(const Time& time)
-	{
-		// this is not an effective algo
-		// TODO: optional sorting
-		auto range = get_timeline(time.get_timeline());
-		auto iter = boost::find_if(range, [time](auto const& waypoint) {
-			return waypoint.get_time() == time;
-		});
-		return temp_iter::optional_iter(range, iter);
-	}
+	virtual MaybeIter at_time(const Time& time);
 
 	//! Find waypoint before `time`
-	GET_WP before_time(const Time& time)
-	{
-		return boost::none;
-	}
+	virtual MaybeIter before_time(const Time& time);
 
 	//! Find waypoint after `time`
-	GET_WP after_time(const Time& time)
-	{
-		return boost::none;
-	}
+	virtual MaybeIter after_time(const Time& time);
 
 public:
 	//! Add a waypoint
-	GET_WP add_waypoint(const synfig::Time& time)
-	{
-		return boost::none;
-	}
-#undef GET_WP
+	virtual MaybeIter add_waypoint(const synfig::Time& time);
 
 public:
 	// Waypoint edit functions
 
 	//! Clear the whole timeline
-	virtual void clear_timeline(const String& timeline)
-	{
-	}
-	//! Remove waypoints from a certain timeline
-	virtual void remove_waypoint(WPointer waypoint)
-	{
-	}
+	virtual void clear_timeline(const String& timeline);
+	//! Remove a waypoint
+	virtual void remove_waypoint(const UniqueID& uid);
 	//! Process all waypoints
-	virtual void apply_function(void f(WPointer waypoint))
-	{
-	}
+	virtual void apply_function(void f(Iter waypoint));
 
 public:
 	AnimatedInterface(ValueNode& node) : ValueNode_Interface(node) {}
