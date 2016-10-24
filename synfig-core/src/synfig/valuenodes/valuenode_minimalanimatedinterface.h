@@ -99,7 +99,7 @@ public:
 	//! Remove a waypoint
 	virtual void remove_waypoint(const UniqueID& uid);
 	//! Process all waypoints
-	virtual void apply_function(void f(Iter waypoint));
+	virtual void apply_function(void f(Waypoint& wp));
 
 public:
 	AnimatedInterface(ValueNode& node) : ValueNode_Interface(node) {}

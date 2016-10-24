@@ -82,6 +82,10 @@ AnimatedInterface::remove_waypoint(const UniqueID& uid)
 }
 
 void
-AnimatedInterface::apply_function(void f(Iter waypoint))
+AnimatedInterface::apply_function(void f(Waypoint& wp))
 {
+	for (auto& wp : get_all())
+	{
+		f(wp);
+	}
 }
