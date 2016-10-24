@@ -155,7 +155,8 @@ public:
 	//! raise exception if waypoint exist at specified time
 	void no_waypoint_at_time(const Time& time);
 
-protected:
+// protected:
+public:
 	// Implement new animated interface
 	Range get_all();
 	Range get_timeline(const String& timeline);

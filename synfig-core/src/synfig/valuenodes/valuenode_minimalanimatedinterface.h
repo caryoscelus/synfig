@@ -68,7 +68,8 @@ public:
 	using Iter = Range::iterator;
 	using MaybeIter = boost::optional<Iter>;
 
-protected:
+// protected:
+public:
 	virtual Range get_all() = 0;
 	virtual Range get_timeline(const String& timeline) = 0;
 

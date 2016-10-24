@@ -1843,33 +1843,34 @@ CanvasParser::parse_animated(xmlpp::Element *element,Canvas::Handle canvas)
 	// when loading a version 0.1 canvas, modify constant angle
 	// waypoints to that they are within 180 degrees of the previous
 	// waypoint's value
-	if (type == type_angle)
+
+	// TODO: test this code with actual v0.1 files or just drop
+	// compatibility; it's unlikely that someone still have useful
+	// sifs from that era, anyway
+	if (type == type_angle && canvas->get_version() == "0.1")
 	{
-		if (canvas->get_version() == "0.1")
+		bool first = true;
+		Real angle, prev = 0;
+
+		for (auto& waypoint : value_node->get_all())
 		{
-			bool first = true;
-			Real angle, prev = 0;
-			WaypointList &wl = value_node->editable_waypoint_list();
-			for (WaypointList::iterator iter = wl.begin(); iter != wl.end(); iter++)
+			angle = Angle::deg(waypoint.get_value(waypoint.get_time()).get(Angle())).get();
+			if (first)
+				first = false;
+			else if (waypoint.get_value_node()->get_name() == "constant")
 			{
-				angle = Angle::deg(iter->get_value(iter->get_time()).get(Angle())).get();
-				if (first)
-					first = false;
-				else if (iter->get_value_node()->get_name() == "constant")
+				if (angle - prev > 180)
 				{
-					if (angle - prev > 180)
-					{
-						while (angle - prev > 180) angle -= 360;
-						iter->set_value(Angle::deg(angle));
-					}
-					else if (prev - angle > 180)
-					{
-						while (prev - angle > 180) angle += 360;
-						iter->set_value(Angle::deg(angle));
-					}
+					while (angle - prev > 180) angle -= 360;
+					waypoint.set_value(Angle::deg(angle));
 				}
-				prev = angle;
+				else if (prev - angle > 180)
+				{
+					while (prev - angle > 180) angle += 360;
+					waypoint.set_value(Angle::deg(angle));
+				}
 			}
+			prev = angle;
 		}
 	}
 
