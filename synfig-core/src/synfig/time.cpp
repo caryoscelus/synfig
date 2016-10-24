@@ -76,7 +76,7 @@ Time::Time(const String &str_, float fps):
 			return;
 		}
 		timeline_ = str_.substr(1, bracket_pos-1);
-		str = str_.substr(bracket_pos);
+		str = str_.substr(bracket_pos+1);
 	}
 	else
 	{
