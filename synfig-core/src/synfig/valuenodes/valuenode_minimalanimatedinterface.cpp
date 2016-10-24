@@ -72,6 +72,11 @@ AnimatedInterface::add_waypoint(const Time& time)
 }
 
 void
+AnimatedInterface::clear_all()
+{
+}
+
+void
 AnimatedInterface::clear_timeline(const String& timeline)
 {
 }

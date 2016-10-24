@@ -1311,5 +1311,12 @@ ValueNode_AnimatedInterfaceConst::get_all()
 ValueNode_AnimatedInterfaceConst::Range
 ValueNode_AnimatedInterfaceConst::get_timeline(const String& timeline)
 {
+	// TODO
 	return get_all();
+}
+
+void
+ValueNode_AnimatedInterfaceConst::clear_all()
+{
+	editable_waypoint_list().clear();
 }

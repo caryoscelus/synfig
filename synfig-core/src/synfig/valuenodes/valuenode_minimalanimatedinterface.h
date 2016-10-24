@@ -95,6 +95,8 @@ public:
 public:
 	// Waypoint edit functions
 
+	//! Clear everything
+	virtual void clear_all();
 	//! Clear the whole timeline
 	virtual void clear_timeline(const String& timeline);
 	//! Remove a waypoint

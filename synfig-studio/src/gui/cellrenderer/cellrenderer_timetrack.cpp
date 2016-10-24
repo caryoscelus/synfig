@@ -7,6 +7,7 @@
 **	\legal
 **	Copyright (c) 2002-2005 Robert B. Quattlebaum Jr., Adrian Bentley
 **	Copyright (c) 2007, 2008 Chris Moore
+**	Copyright (c) 2016 caryoscelus
 **
 **	This package is free software; you can redistribute it and/or
 **	modify it under the terms of the GNU General Public License as
@@ -556,34 +557,29 @@ void CellRenderer_TimeTrack::draw_activepoint_off(
 
 }
 
-synfig::ValueNode_Animated::WaypointList::iterator
-CellRenderer_TimeTrack::find_editable_waypoint(const synfig::Time& /*t*/,const synfig::Time& scope)
+UniqueID
+CellRenderer_TimeTrack::find_waypoint(const synfig::Time& t, const synfig::Time& scope)
 {
 	synfig::ValueNode_Animated *value_node=dynamic_cast<synfig::ValueNode_Animated*>(property_value_desc().get_value().get_value_node().get());
 
-    Time nearest(Time::end());
-
-	synfig::ValueNode_Animated::WaypointList::iterator iter,ret;
+	Time nearest(Time::end());
 
 	if(value_node)
 	{
-		for(
-			iter=value_node->editable_waypoint_list().begin();
-			iter!=value_node->editable_waypoint_list().end();
-			iter++
-			)
+		UniqueID result;
+		for (auto const& waypoint : value_node->get_all())
 		{
-			Time val=abs(iter->get_time()-selected_time);
+			Time val=abs(waypoint.get_time()-t);
 			if(val<nearest)
 			{
-				nearest=val;
-				ret=iter;
+				nearest = val;
+				result = waypoint;
 			}
 		}
 
 		if(nearest!=Time::end() && nearest<scope)
 		{
-			return ret;
+			return result;
 		}
 	}
 	throw int();
@@ -707,11 +703,8 @@ CellRenderer_TimeTrack::activate_vfunc(
 		selection=false;
 		try
 		{
-			iter=find_editable_waypoint(selected_time,pixel_width*cell_area.get_height()/2);
-			selected_waypoint=iter;
-			selected=*iter;
-
-			selection=true;
+			selected = find_waypoint(selected_time, pixel_width*cell_area.get_height()/2);
+			selection = true;
 		}
 		catch(int)
 		{

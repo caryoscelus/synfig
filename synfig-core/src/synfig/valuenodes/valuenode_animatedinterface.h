@@ -158,8 +158,10 @@ public:
 // protected:
 public:
 	// Implement new animated interface
-	Range get_all();
-	Range get_timeline(const String& timeline);
+	virtual Range get_all() override;
+	virtual Range get_timeline(const String& timeline) override;
+
+	virtual void clear_all() override;
 
 // 	findresult optional_to_findresult(boost::optional<WaypointList::iterator> result) {
 // 		findresult f;
@@ -176,7 +178,7 @@ protected:
 	virtual void animated_changed() { node().changed(); }
 
 public:
-	using ValueNode_AnimatedInterfaceConst::editable_waypoint_list;
+// 	using ValueNode_AnimatedInterfaceConst::editable_waypoint_list;
 	using ValueNode_AnimatedInterfaceConst::new_waypoint;
 	using ValueNode_AnimatedInterfaceConst::add;
 	using ValueNode_AnimatedInterfaceConst::insert_time;

@@ -7,6 +7,7 @@
 **	\legal
 **	Copyright (c) 2002-2005 Robert B. Quattlebaum Jr., Adrian Bentley
 **	Copyright (c) 2007, 2008 Chris Moore
+**	Copyright (c) 2016 caryoscelus
 **
 **	This package is free software; you can redistribute it and/or
 **	modify it under the terms of the GNU General Public License as
@@ -88,9 +89,7 @@ private:
 
 	sigc::signal<void, synfig::Waypoint, synfig::ValueNode::Handle> signal_waypoint_changed_;
 
-	//! Iterator for selected waypoint. (Should this be an UniqueID instead?)
-	synfig::ValueNode_Animated::WaypointList::iterator selected_waypoint;
-
+	//! selected waypoint
 	synfig::UniqueID selected;
 
 	//! selected information for time... (will work for way points etc...)
@@ -192,7 +191,7 @@ public:
 
 	bool is_selected(const synfig::Waypoint& waypoint)const;
 
-	synfig::ValueNode_Animated::WaypointList::iterator find_editable_waypoint(const synfig::Time& t, const synfig::Time& scope=synfig::Time::end());
+	synfig::UniqueID find_waypoint(const synfig::Time& t, const synfig::Time& scope=synfig::Time::end());
 
 	virtual void
 	render_vfunc(
