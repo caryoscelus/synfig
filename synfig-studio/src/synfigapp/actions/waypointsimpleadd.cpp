@@ -143,15 +143,15 @@ void
 Action::WaypointSimpleAdd::undo()
 {
 	//remove our old version...
-	ValueNode_Animated::findresult iter = value_node->find_uid(waypoint);
+	auto maybe_iter = value_node->get_by_uid(waypoint);
 
-	if(!iter.second)
+	if(!maybe_iter.is_initialized())
 	{
 		throw Error(_("The waypoint to remove no longer exists"));
 	}
 
 	//remove the offending value
-	value_node->erase(*iter.first); //could also just use waypoint
+	value_node->erase(waypoint);
 
 	if(time_overwrite)
 	{
