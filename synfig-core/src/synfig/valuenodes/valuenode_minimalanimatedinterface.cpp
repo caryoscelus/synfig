@@ -54,15 +54,41 @@ AnimatedInterface::at_time(const Time& time)
 }
 
 AnimatedInterface::MaybeIter
+AnimatedInterface::before_or_after_time(const Time& time, std::function<bool(const Time&, const Time&)> cmp)
+{
+	// generic method
+	// override this in subclass for effectiveness
+	auto uid = UniqueID::nil();
+	auto last_time = Time::begin(time);
+	apply_function([&uid, &last_time, time, cmp](auto const& waypoint) {
+		auto t = waypoint.get_time();
+		if (!time.comparable(t))
+			return;
+		if (cmp(last_time, t) && cmp(t, time))
+		{
+			last_time = t;
+			uid = waypoint;
+		}
+	});
+	if (!uid)
+		return boost::none;
+	return get_by_uid(uid);
+}
+
+AnimatedInterface::MaybeIter
 AnimatedInterface::before_time(const Time& time)
 {
-	return boost::none;
+	return before_or_after_time(time, [](auto const& a, auto const& b) -> bool {
+		return a < b;
+	});
 }
 
 AnimatedInterface::MaybeIter
 AnimatedInterface::after_time(const Time& time)
 {
-	return boost::none;
+	return before_or_after_time(time, [](auto const& a, auto const& b) -> bool {
+		return a > b;
+	});
 }
 
 AnimatedInterface::MaybeIter
@@ -87,7 +113,7 @@ AnimatedInterface::erase(const UniqueID& uid)
 }
 
 void
-AnimatedInterface::apply_function(void f(Waypoint& wp))
+AnimatedInterface::apply_function(std::function<void (Waypoint& wp)> f)
 {
 	for (auto& wp : get_all())
 	{

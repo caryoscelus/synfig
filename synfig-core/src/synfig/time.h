@@ -7,6 +7,7 @@
 **	\legal
 **	Copyright (c) 2002-2005 Robert B. Quattlebaum Jr., Adrian Bentley
 **	Copyright (c) 2007 Chris Moore
+**	Copyright (c) 2016 caryoscelus
 **
 **	This package is free software; you can redistribute it and/or
 **	modify it under the terms of the GNU General Public License as
@@ -67,9 +68,10 @@ public:
 	}; // END of enum Format
 
 private:
+	// Time value
+	TimeDiff value_ = 0;
 	//! which time line this time position belongs to
 	String timeline_ = "";
-	TimeDiff value_ = 0;
 
 	static TimeDiff epsilon_() { return std::numeric_limits<TimeDiff>::epsilon()*8; }
 
@@ -96,18 +98,31 @@ public:
 	Time(const String &string, float fps=0);
 
 	//! Marks the exclusive negative boundary of time
-	static const Time begin() { return static_cast<synfig::Time>(-32767.0f*512.0f); }
+	static Time begin() { return static_cast<synfig::Time>(-32767.0f*512.0f); }
+
+	template <class T>
+	static Time begin(const T& tl) { return to_timeline(begin(), tl); }
 
 	//! Marks the exclusive positive boundary of time
 	static const Time end() { return static_cast<synfig::Time>(32767.0f*512.0f); }
 
+	template <class T>
+	static Time end(const T& tl) { return to_timeline(end(), tl); }
+
 	//! Marks zero time
 	static const Time zero() { return static_cast<synfig::Time>(0); }
 
+	template <class T>
+	static Time zero(const T& tl) { return to_timeline(zero(), tl); }
+
 	//! The amount of allowable error in calculations
+	[[deprecated]]
 	static const Time epsilon() { return static_cast<synfig::Time>(epsilon_()); }
 
 	const String& get_timeline() const { return timeline_; }
+
+	static Time to_timeline(const Time& time, const String& tl) { return Time(time.value(), tl); }
+	static Time to_timeline(const Time& time, const Time& from) { return Time(time.value(), from.get_timeline()); }
 
 	//! Returns a string describing the current time value
 	/*!	\see Format */
@@ -146,6 +161,7 @@ public:
 		return value_-rhs.value_ > epsilon_();
 	}
 
+	TimeDiff value() const { return value_; }
 	operator double()const { return value_; }
 
 	bool operator<(const Time& rhs)const { return is_less_than(rhs); }

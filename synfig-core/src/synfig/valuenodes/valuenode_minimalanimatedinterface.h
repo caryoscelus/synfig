@@ -88,6 +88,9 @@ public:
 	//! Find waypoint after `time`
 	virtual MaybeIter after_time(const Time& time);
 
+protected:
+	virtual MaybeIter before_or_after_time(const Time& time, std::function<bool(const Time&, const Time&)> cmp);
+
 public:
 	//! Add a waypoint
 	virtual MaybeIter add_waypoint(const synfig::Time& time);
@@ -102,7 +105,7 @@ public:
 	//! Remove a waypoint
 	virtual void erase(const UniqueID& uid);
 	//! Process all waypoints
-	virtual void apply_function(void f(Waypoint& wp));
+	virtual void apply_function(std::function<void (Waypoint& wp)> f);
 
 public:
 	AnimatedInterface(ValueNode& node) : ValueNode_Interface(node) {}
