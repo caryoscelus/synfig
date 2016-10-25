@@ -786,7 +786,7 @@ ValueNode_Bone::get_bones_referenced_by(ValueNode::Handle value_node, bool recur
 	{
 		// ValueNode_Animated::Handle ret = ValueNode_Animated::create(type_bone_object);
 		ValueNode_Animated::WaypointList list(value_node_animated->waypoint_list());
-		for (ValueNode_Animated::WaypointList::iterator iter = list.begin(); iter != list.end(); iter++)
+		for (auto iter = list.begin(); iter != list.end(); iter++)
 		{
 //			printf("%s:%d getting bones from waypoint\n", __FILE__, __LINE__);
 			BoneSet ret2(get_bones_referenced_by(iter->get_value_node(), recursive));

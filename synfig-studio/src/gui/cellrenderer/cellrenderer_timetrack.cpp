@@ -601,7 +601,6 @@ CellRenderer_TimeTrack::activate_vfunc(
 	}
 
 	path=treepath;
-	synfig::ValueNode_Animated::WaypointList::iterator iter;
 	Glib::RefPtr<Gtk::Adjustment> adjustment=get_adjustment();
 
 	// synfig::ValueNode_Animated *value_node=dynamic_cast<synfig::ValueNode_Animated*>(property_value_desc().get_value().get_value_node().get());

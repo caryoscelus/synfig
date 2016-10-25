@@ -1028,7 +1028,7 @@ Action::ValueDescSet::prepare()
 			if(!value_node)value_node=ValueNode_Animated::create(value,time);
 			// Be sure that the newly created waypoint is set with the default
 			// interpolations.
-			synfig::ValueNode_Animated::WaypointList::iterator iter(value_node->find(time));
+			auto iter = value_node->find(time);
 			iter->set_before(interp==INTERPOLATION_UNDEFINED?synfigapp::Main::get_interpolation():interp);
 			iter->set_after(interp==INTERPOLATION_UNDEFINED?synfigapp::Main::get_interpolation():interp);
 			value_node->set_interpolation(interp);
@@ -1057,12 +1057,11 @@ Action::ValueDescSet::prepare()
 		}
 		if(!value_node)
 			throw Error(_("Direct manipulation of this ValueNode type is not yet supported"));
-		synfig::ValueNode_Animated::WaypointList::iterator iter;
 		Waypoint waypoint;
 		Action::Handle action(WaypointSetSmart::create());
 		try
 		{
-			iter=value_node->find(time);
+			auto iter=value_node->find(time);
 			// value_node->find throws an exception
 			// when no waypoint is found at given time
 			waypoint=*iter;

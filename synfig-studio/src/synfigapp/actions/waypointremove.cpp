@@ -120,7 +120,7 @@ Action::WaypointRemove::is_ready()const
 void
 Action::WaypointRemove::perform()
 {
-	WaypointList::iterator iter(value_node->find(waypoint));
+	auto iter = value_node->find(waypoint);
 
 	if((UniqueID)*iter!=(UniqueID)waypoint)
 		throw Error(_("UniqueID mismatch, iter=%d, waypoint=%d"),iter->get_uid(),waypoint.get_uid());

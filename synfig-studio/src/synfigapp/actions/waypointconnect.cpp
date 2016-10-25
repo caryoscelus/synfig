@@ -132,7 +132,7 @@ Action::WaypointConnect::is_ready()const
 void
 Action::WaypointConnect::perform()
 {
-	ValueNode_Animated::WaypointList::iterator iter(parent_value_node->find(waypoint_time));
+	auto iter = parent_value_node->find(waypoint_time);
 
 	old_value_node=iter->get_value_node();
 	iter->set_value_node(new_value_node);
@@ -148,7 +148,7 @@ Action::WaypointConnect::perform()
 void
 Action::WaypointConnect::undo()
 {
-	ValueNode_Animated::WaypointList::iterator iter(parent_value_node->find(waypoint_time));
+	auto iter = parent_value_node->find(waypoint_time);
 
 	iter->set_value_node(old_value_node);
 

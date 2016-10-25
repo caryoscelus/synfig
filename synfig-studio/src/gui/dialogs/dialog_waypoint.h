@@ -71,7 +71,6 @@ class Dialog_Waypoint : public Gtk::Dialog
 {
 	Widget_Waypoint *waypointwidget;
 	etl::handle<synfig::Canvas> canvas;
-	synfig::ValueNode_Animated::WaypointList::iterator waypoint;
 	synfigapp::ValueDesc value_desc_;
 
 	sigc::signal<void> signal_changed_;

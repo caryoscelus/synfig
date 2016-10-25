@@ -192,30 +192,6 @@ Action::WaypointSetSmart::calc_waypoint()
 		waypoint.set_before(interp==INTERPOLATION_UNDEFINED?synfigapp::Main::get_interpolation():interp);
 		waypoint.set_after(interp==INTERPOLATION_UNDEFINED?synfigapp::Main::get_interpolation():interp);
 	}
-/*
-	Time time=waypoint.get_time();
-	ValueNode_Animated::WaypointList &waypoint_list(value_node->waypoint_list());
-	ValueNode_Animated::WaypointList::iterator iter;
-
-	if(waypoint_list.empty())
-	{
-		waypoint.set_value((*value_node)(time));
-		return;
-	}
-
-	ValueNode_Animated::WaypointList::iterator closest=waypoint_list.begin();
-
-	for(iter=waypoint_list.begin();iter!=waypoint_list.end();++iter)
-	{
-		const Real dist(abs(iter->get_time()-time));
-		if(dist<abs(closest->get_time()-time))
-			closest=iter;
-	}
-	if(!closest->is_static())
-		waypoint.set_value_node(closest->get_value_node());
-	else
-		waypoint.set_value((*value_node)(time));
-*/
 }
 
 void
@@ -366,7 +342,7 @@ Action::WaypointSetSmart::prepare()
 	{
 		//synfig::info("WaypointSetSmart: Move/Update?");
 		// Let's try to replace the old waypoint, if it exists
-		WaypointList::iterator iter(value_node->find(waypoint));
+		auto iter = value_node->find(waypoint);
 
 		if(iter == value_node->waypoint_list().end())
 			throw int();
@@ -394,7 +370,7 @@ Action::WaypointSetSmart::prepare()
 	{
 		//synfig::info("WaypointSetSmart: Replace?");
 		// Check to see if a waypoint exists at this point in time
-		WaypointList::iterator iter=value_node->find(waypoint.get_time());
+		auto iter=value_node->find(waypoint.get_time());
 
 		waypoint.mimic(*iter);
 

@@ -789,11 +789,7 @@ private:
 
 	bool on_button_press_event(GdkEventButton *event);
 
-	//bool on_children_tree_event(GdkEvent *event);
-
 	bool on_keyframe_tree_event(GdkEvent *event);
-
-	//void on_children_edited_value(const Glib::ustring&path_string,synfig::ValueBase value);
 
 	void on_dirty_preview();
 
@@ -801,13 +797,7 @@ private:
 
 	bool on_layer_user_click(int, Gtk::TreeRow, LayerTree::ColumnID);
 
-//	void on_layer_toggle(const Glib::ustring& path_string, Gtk::TreeModelColumn<bool> column);
-
 	void on_mode_changed(synfigapp::CanvasInterface::Mode mode);
-
-//	void on_layer_waypoint_clicked(const Glib::ustring &, synfig::ValueNode_Animated::WaypointList::iterator);
-
-	//void on_children_waypoint_clicked(const Glib::ustring &, synfig::ValueNode_Animated::WaypointList::iterator);
 
 	void on_waypoint_changed();
 
@@ -818,13 +808,6 @@ private:
 	void on_id_changed();
 
 	void on_time_changed();
-
-	/*
-	void on_layer_raise_pressed();
-	void on_layer_lower_pressed();
-	void on_layer_duplicate_pressed();
-	void on_layer_delete_pressed();
-	*/
 
 	void on_keyframe_add_pressed();
 
