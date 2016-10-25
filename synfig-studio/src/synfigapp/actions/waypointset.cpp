@@ -1,11 +1,12 @@
 /* === S Y N F I G ========================================================= */
 /*!	\file waypointset.cpp
-**	\brief Template File
+**	\brief WaypointSet - action used when waypoint is set somewhere
 **
 **	$Id$
 **
 **	\legal
 **	Copyright (c) 2002-2005 Robert B. Quattlebaum Jr., Adrian Bentley
+**	Copyright (c) 2016 caryoscelus
 **
 **	This package is free software; you can redistribute it and/or
 **	modify it under the terms of the GNU General Public License as
@@ -121,55 +122,45 @@ Action::WaypointSet::is_ready()const
 void
 Action::WaypointSet::perform()
 {
-	WaypointList::iterator iter;
+	// XXX: this doesn't look very elegant
+	// i'm just rewriting this with c++11 feature & new animated API,
+	// but the logic remains as it was
 
-#if 1
-	vector<WaypointList::iterator>	iters;
-	vector<Waypoint>::iterator i = waypoints.begin(), end = waypoints.end();
+	ValueNode_Animated::Iter iter;
 
-	for(; i != end; ++i)
+	vector<ValueNode_Animated::Iter> iters;
+
+	for (auto const& wp : waypoints)
 	{
-		try { iters.push_back(value_node->find(*i)); }
-		catch(synfig::Exception::NotFound)
-		{
+		auto maybe_iter = value_node->get_by_uid(wp);
+		if (!maybe_iter.is_initialized())
 			throw Error(_("Unable to find waypoint"));
-		}
+		iters.push_back(*maybe_iter);
 	}
 
 	//check to see which valuenodes are going to override because of the time...
-	ValueNode_Animated::findresult timeiter;
-
-	for(i = waypoints.begin(); i != end; ++i)
+	for(auto const& wp : waypoints)
 	{
-		timeiter = value_node->find_time(i->get_time());
-
-		bool candelete = timeiter.second;
+		auto maybe_at_time = value_node->at_time(wp.get_time());
 
 		//we only want to track overwrites (not waypoints that are also being modified)
-		if(candelete)
-		{
-			for(vector<WaypointList::iterator>::iterator ii = iters.begin(); ii != iters.end(); ++ii)
-			{
-				if(timeiter.first == *ii)
-				{
-					candelete = false;
-					break;
-				}
-			}
-		}
+		if (!maybe_at_time.is_initialized())
+			continue;
 
-		//if we can still delete it after checking, record it, and then remove them all later
-		if(candelete)
+		auto iter = *maybe_at_time;
+
+		// if iter is not one pointing to our waypoints, record it, and then remove them all later
+		// not sure if this can really happen..
+		if (std::find(begin(iters), end(iters), iter) == end(iters))
 		{
-			Waypoint w = *timeiter.first;
-			overwritten_waypoints.push_back(w);
+			overwritten_waypoints.push_back(*iter);
 		}
 	}
 
 	//overwrite all the valuenodes we're supposed to set
 	{
-		i = waypoints.begin();
-		for(vector<WaypointList::iterator>::iterator ii = iters.begin(); ii != iters.end() && i != end; ++ii, ++i)
+		auto i = waypoints.begin();
+		for(auto ii = iters.begin(); ii != iters.end() && i != end(waypoints); ++ii, ++i)
 		{
 			old_waypoints.push_back(**ii);
 			**ii = *i; //set the point to the corresponding point in the normal waypoint list
@@ -177,45 +168,10 @@ Action::WaypointSet::perform()
 	}
 
 	//remove all the points we're supposed to be overwriting
+	for (auto const& wp : overwritten_waypoints)
 	{
-		vector<Waypoint>::iterator 	oi = overwritten_waypoints.begin(),
-									oend = overwritten_waypoints.end();
-		for(; oi != oend; ++oi)
-		{
-			value_node->erase(*oi);
-		}
+		value_node->erase(wp);
 	}
-
-#else
-	try { iter=value_node->find(waypoint); }
-	catch(synfig::Exception::NotFound)
-	{
-		throw Error(_("Unable to find waypoint"));
-	}
-
-	//find the value at the old time before we replace it
-	ValueNode_Animated::findresult timeiter;
-	timeiter = value_node->find_time(waypoint.get_time());
-
-	//we only want to track overwrites (not inplace modifications)
-	if(timeiter.second && waypoint.get_uid() == timeiter.first->get_uid())
-	{
-		timeiter.second = false;
-	}
-
-	//copy and overwrite
-	old_waypoint=*iter;
-	*iter=waypoint;
-
-	//if we've found a unique one then we need to erase it, but store it first
-	if(timeiter.second)
-	{
-		time_overwrite = true;
-		overwritten_wp = *timeiter.first;
-
-		value_node->erase(overwritten_wp);
-	}
-#endif
 
 	// Signal that a valuenode has been changed
 	value_node->changed();
@@ -224,47 +180,24 @@ Action::WaypointSet::perform()
 void
 Action::WaypointSet::undo()
 {
-	WaypointList::iterator iter;
+	ValueNode_Animated::Iter iter;
 
-#if 1
-	vector<Waypoint>::iterator i = old_waypoints.begin(), end = old_waypoints.end();
-
-	for(; i != end; ++i)
+	for (auto const& wp : old_waypoints)
 	{
-		try { iter = value_node->find(*i); }
-		catch(synfig::Exception::NotFound)
-		{
+		auto maybe_iter = value_node->get_by_uid(wp);
+		if (!maybe_iter.is_initialized())
 			throw Error(_("Unable to find waypoint"));
-		}
+		auto iter = *maybe_iter;
 
 		//overwrite with old one
-		*iter = *i;
+		*iter = wp;
 	}
 
 	//add back in all the points that we removed before...
+	for (auto const& wp : overwritten_waypoints)
 	{
-		vector<Waypoint>::iterator 	oi = overwritten_waypoints.begin(),
-									oend = overwritten_waypoints.end();
-		for(; oi != oend; ++oi)
-		{
-			value_node->add(*oi);
-		}
+		value_node->add(wp);
 	}
-
-#else
-	try { iter=value_node->find(old_waypoint); }
-	catch(synfig::Exception::NotFound)
-	{
-		throw Error(_("Unable to find waypoint"));
-	}
-
-	*iter=old_waypoint;
-
-	if(time_overwrite)
-	{
-		value_node->add(overwritten_wp);
-	}
-#endif
 
 	// Signal that a valuenode has been changed
 	value_node->changed();
