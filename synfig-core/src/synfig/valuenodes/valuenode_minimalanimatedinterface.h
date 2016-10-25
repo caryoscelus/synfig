@@ -100,7 +100,7 @@ public:
 	//! Clear the whole timeline
 	virtual void clear_timeline(const String& timeline);
 	//! Remove a waypoint
-	virtual void remove_waypoint(const UniqueID& uid);
+	virtual void erase(const UniqueID& uid);
 	//! Process all waypoints
 	virtual void apply_function(void f(Waypoint& wp));
 

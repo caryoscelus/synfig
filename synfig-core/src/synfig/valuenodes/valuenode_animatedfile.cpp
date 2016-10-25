@@ -208,7 +208,7 @@ ValueNode_AnimatedFile::load_file(const String &filename, bool forse)
 
 	internal->file_monitor.clear();
 	filefields.clear();
-	erase_all();
+	clear_all();
 
 	if (!full_filename.empty())
 	{

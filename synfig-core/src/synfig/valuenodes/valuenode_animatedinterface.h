@@ -95,8 +95,6 @@ protected:
 	//! Inserts time \delta from time \location to the waypoints.
 	//! used to move waypoints in the time line.
 	void insert_time(const Time& location, const Time& delta);
-	//! Removes a waypoint based on its UniqueId from the waypoint list
-	void erase(const UniqueID &x);
 	//! Removes all waypoints
 	void erase_all();
 
@@ -162,6 +160,8 @@ public:
 	virtual Range get_timeline(const String& timeline) override;
 
 	virtual void clear_all() override;
+	//! Removes a waypoint based on its UniqueId from the waypoint list
+	virtual void erase(const UniqueID &uid) override;
 
 // 	findresult optional_to_findresult(boost::optional<WaypointList::iterator> result) {
 // 		findresult f;

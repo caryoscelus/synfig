@@ -82,7 +82,7 @@ AnimatedInterface::clear_timeline(const String& timeline)
 }
 
 void
-AnimatedInterface::remove_waypoint(const UniqueID& uid)
+AnimatedInterface::erase(const UniqueID& uid)
 {
 }
 
