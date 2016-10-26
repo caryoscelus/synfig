@@ -122,12 +122,13 @@ void
 Action::WaypointSimpleAdd::perform()
 {
 	//remove any pretenders that lie at our destination
-	ValueNode_Animated::findresult iter = value_node->find_time(waypoint.get_time());
+	auto maybe_iter = value_node->at_time(waypoint.get_time());
 
 	time_overwrite = false;
-	if(iter.second)
+	if (maybe_iter.is_initialized())
 	{
-		overwritten_wp = *iter.first;
+		auto iter = *maybe_iter;
+		overwritten_wp = *iter;
 		time_overwrite = true;
 		value_node->erase(overwritten_wp);
 	}

@@ -64,6 +64,7 @@ public:
 	typedef synfig::Waypoint Waypoint;
 	typedef synfig::WaypointList WaypointList;
 
+private:
 	typedef	std::pair<WaypointList::iterator,bool>	findresult;
 	typedef	std::pair<WaypointList::const_iterator,bool>	const_findresult;
 
