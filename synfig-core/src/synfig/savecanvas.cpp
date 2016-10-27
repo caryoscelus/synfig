@@ -451,50 +451,47 @@ xmlpp::Element* encode_animated(xmlpp::Element* root,ValueNode_Animated::ConstHa
 
 	root->set_attribute("type",value_node->get_type().description.name);
 
-	const ValueNode_Animated::WaypointList &waypoint_list=value_node->waypoint_list();
-	ValueNode_Animated::WaypointList::const_iterator iter;
-	
 	encode_interpolation(root, value_node->get_interpolation(), "interpolation");
 	
-	for(iter=waypoint_list.begin();iter!=waypoint_list.end();++iter)
+	for (auto const& waypoint : value_node->get_all())
 	{
 		xmlpp::Element *waypoint_node=root->add_child("waypoint");
-		waypoint_node->set_attribute("time",iter->get_time().get_string());
+		waypoint_node->set_attribute("time",waypoint.get_time().get_string());
 
-		if(iter->get_value_node()->is_exported())
-			waypoint_node->set_attribute("use",iter->get_value_node()->get_relative_id(canvas));
+		if(waypoint.get_value_node()->is_exported())
+			waypoint_node->set_attribute("use",waypoint.get_value_node()->get_relative_id(canvas));
 		else {
-			ValueNode::ConstHandle value_node = iter->get_value_node();
+			ValueNode::ConstHandle value_node = waypoint.get_value_node();
 			if(ValueNode_Const::ConstHandle::cast_dynamic(value_node))
 			{
 				const ValueBase data = ValueNode_Const::ConstHandle::cast_dynamic(value_node)->get_value();
 				if (data.get_type() == type_canvas)
 					waypoint_node->set_attribute("use",data.get(Canvas::Handle()).get()->get_relative_id(canvas));
 				else
-					encode_value_node(waypoint_node->add_child("value_node"),iter->get_value_node(),canvas);
+					encode_value_node(waypoint_node->add_child("value_node"),waypoint.get_value_node(),canvas);
 			}
 			else
-				encode_value_node(waypoint_node->add_child("value_node"),iter->get_value_node(),canvas);
+				encode_value_node(waypoint_node->add_child("value_node"),waypoint.get_value_node(),canvas);
 		}
 		
-		if (iter->get_before()!=INTERPOLATION_UNDEFINED)
-			encode_interpolation(waypoint_node,iter->get_before(),"before");
+		if (waypoint.get_before()!=INTERPOLATION_UNDEFINED)
+			encode_interpolation(waypoint_node,waypoint.get_before(),"before");
 		else
 			error("Unknown waypoint type for \"before\" attribute");
 
-		if (iter->get_after()!=INTERPOLATION_UNDEFINED)
-			encode_interpolation(waypoint_node,iter->get_after(),"after");
+		if (waypoint.get_after()!=INTERPOLATION_UNDEFINED)
+			encode_interpolation(waypoint_node,waypoint.get_after(),"after");
 		else
 			error("Unknown waypoint type for \"after\" attribute");
 
-		if(iter->get_tension()!=0.0)
-			waypoint_node->set_attribute("tension",strprintf("%f",iter->get_tension()));
-		if(iter->get_temporal_tension()!=0.0)
-			waypoint_node->set_attribute("temporal-tension",strprintf("%f",iter->get_temporal_tension()));
-		if(iter->get_continuity()!=0.0)
-			waypoint_node->set_attribute("continuity",strprintf("%f",iter->get_continuity()));
-		if(iter->get_bias()!=0.0)
-			waypoint_node->set_attribute("bias",strprintf("%f",iter->get_bias()));
+		if(waypoint.get_tension()!=0.0)
+			waypoint_node->set_attribute("tension",strprintf("%f",waypoint.get_tension()));
+		if(waypoint.get_temporal_tension()!=0.0)
+			waypoint_node->set_attribute("temporal-tension",strprintf("%f",waypoint.get_temporal_tension()));
+		if(waypoint.get_continuity()!=0.0)
+			waypoint_node->set_attribute("continuity",strprintf("%f",waypoint.get_continuity()));
+		if(waypoint.get_bias()!=0.0)
+			waypoint_node->set_attribute("bias",strprintf("%f",waypoint.get_bias()));
 
 	}
 

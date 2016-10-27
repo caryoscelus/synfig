@@ -1852,7 +1852,7 @@ CanvasParser::parse_animated(xmlpp::Element *element,Canvas::Handle canvas)
 		bool first = true;
 		Real angle, prev = 0;
 
-		for (auto& waypoint : value_node->get_all())
+		for (auto& waypoint : value_node->access_all())
 		{
 			angle = Angle::deg(waypoint.get_value(waypoint.get_time()).get(Angle())).get();
 			if (first)

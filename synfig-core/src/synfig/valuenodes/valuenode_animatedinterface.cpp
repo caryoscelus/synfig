@@ -1303,13 +1303,26 @@ ValueNode_AnimatedInterfaceConst::no_waypoint_at_time(const Time& t)
 }
 
 ValueNode_AnimatedInterfaceConst::Range
-ValueNode_AnimatedInterfaceConst::get_all()
+ValueNode_AnimatedInterfaceConst::access_all()
 {
 	return boost::iterator_range<WaypointList::iterator>(begin(editable_waypoint_list()), end(editable_waypoint_list()));
 }
 
 ValueNode_AnimatedInterfaceConst::Range
-ValueNode_AnimatedInterfaceConst::get_timeline(const String& timeline)
+ValueNode_AnimatedInterfaceConst::access_timeline(const String& timeline)
+{
+	// TODO
+	return access_all();
+}
+
+ValueNode_AnimatedInterfaceConst::ConstRange
+ValueNode_AnimatedInterfaceConst::get_all() const
+{
+	return boost::iterator_range<WaypointList::const_iterator>(begin(waypoint_list()), end(waypoint_list()));
+}
+
+ValueNode_AnimatedInterfaceConst::ConstRange
+ValueNode_AnimatedInterfaceConst::get_timeline(const String& timeline) const
 {
 	// TODO
 	return get_all();

@@ -157,8 +157,11 @@ public:
 // protected:
 public:
 	// Implement new animated interface
-	virtual Range get_all() override;
-	virtual Range get_timeline(const String& timeline) override;
+	virtual Range access_all() override;
+	virtual Range access_timeline(const String& timeline) override;
+
+	virtual ConstRange get_all() const override;
+	virtual ConstRange get_timeline(const String& timeline) const override;
 
 	virtual void clear_all() override;
 	//! Removes a waypoint based on its UniqueId from the waypoint list

@@ -68,10 +68,16 @@ public:
 	using Iter = Range::iterator;
 	using MaybeIter = boost::optional<Iter>;
 
+	using ConstRange = boost::any_range<Waypoint, boost::forward_traversal_tag, const Waypoint&, std::ptrdiff_t>;
+	using ConstIter = ConstRange::iterator;
+	using MaybeConstIter = boost::optional<ConstIter>;
+
 // protected:
 public:
-	virtual Range get_all() = 0;
-	virtual Range get_timeline(const String& timeline) = 0;
+	virtual Range access_all() = 0;
+	virtual Range access_timeline(const String& timeline) = 0;
+	virtual ConstRange get_all() const = 0;
+	virtual ConstRange get_timeline(const String& timeline) const = 0;
 
 public:
 	// Waypoint search functions

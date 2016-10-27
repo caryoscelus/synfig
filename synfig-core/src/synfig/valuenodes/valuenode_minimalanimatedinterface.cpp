@@ -36,7 +36,7 @@ using namespace synfig::valuenodes;
 AnimatedInterface::MaybeIter
 AnimatedInterface::get_by_uid(const UniqueID& uid)
 {
-	auto range = get_all();
+	auto range = access_all();
 	auto iter = boost::find(range, uid);
 	return temp_iter::optional_iter(range, iter);
 }
@@ -46,7 +46,7 @@ AnimatedInterface::at_time(const Time& time)
 {
 	// this is not an effective algo
 	// TODO: optional sorting
-	auto range = get_timeline(time.get_timeline());
+	auto range = access_timeline(time.get_timeline());
 	auto iter = boost::find_if(range, [time](auto const& waypoint) {
 		return waypoint.get_time() == time;
 	});
@@ -115,7 +115,7 @@ AnimatedInterface::erase(const UniqueID& uid)
 void
 AnimatedInterface::apply_function(std::function<void (Waypoint& wp)> f)
 {
-	for (auto& wp : get_all())
+	for (auto& wp : access_all())
 	{
 		f(wp);
 	}
