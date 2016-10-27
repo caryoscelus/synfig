@@ -426,9 +426,8 @@ Instance::process_filenames(const ProcessFilenamesParams &params, const synfig::
 	// ValueNode_Animated
 	if (ValueNode_Animated::Handle animated = ValueNode_Animated::Handle::cast_dynamic(node))
 	{
-		const WaypointList &waypoints = animated->waypoint_list();
-		for(WaypointList::const_iterator i = waypoints.begin(); i != waypoints.end(); ++i)
-			process_filenames(params, i->get_value_node(), self);
+		for (auto const& wp : animated->get_all())
+			process_filenames(params, wp.get_value_node(), self);
 		return;
 	}
 

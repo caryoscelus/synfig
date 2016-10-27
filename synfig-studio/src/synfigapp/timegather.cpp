@@ -175,36 +175,29 @@ static bool sorted(IT i,IT end, const CMP &cmp = CMP())
 void synfigapp::recurse_valuedesc(synfigapp::ValueDesc h, const std::set<Time> &tlist,
 								timepoints_ref &vals, synfig::Time time_offset, synfig::Real time_dilation)
 {
-	//special cases for Animated, DynamicList, and Linkable
-
-	//synfig::info("ValueBasenode... %p, %s", h.get_value_node().get(),typeid(*h.get_value_node()).name());
-
-
 	//animated case
 	{
-		synfig::ValueNode_Animated::Handle p = synfig::ValueNode_Animated::Handle::cast_dynamic(h.get_value_node());
+		auto animated = synfig::ValueNode_Animated::Handle::cast_dynamic(h.get_value_node());
 
-		if(p)
+		if (animated)
 		{
 			//loop through and determine which waypoint we will need to reference
-			const synfig::WaypointList &w = p->waypoint_list();
+			auto wps = animated->get_all();
 
-			synfig::WaypointList::const_iterator i = w.begin(),
-												end = w.end();
+			auto wp_i = begin(wps);
+			auto wp_end = end(wps);
 
 			std::set<Time>::const_iterator		j = tlist.begin(),
 												jend = tlist.end();
-			for(; i != end && j != jend;)
+			while (wp_i != wp_end && j != jend)
 			{
-				//synfig::info("tpair t(%.3f) = %.3f", (float)*j, (float)(i->get_time()));
-
-				if((*j*time_dilation+time_offset).is_equal(i->get_time()))
+				if((*j*time_dilation+time_offset).is_equal(wp_i->get_time()))
 				{
-					vals.insert(p,*i,time_dilation);
-					++i,++j;
-				}else if(*i < *j*time_dilation+time_offset)
+					vals.insert(animated,*wp_i,time_dilation);
+					++wp_i,++j;
+				}else if(*wp_i < *j*time_dilation+time_offset)
 				{
-					++i;
+					++wp_i;
 				}else ++j;
 			}
 			return;

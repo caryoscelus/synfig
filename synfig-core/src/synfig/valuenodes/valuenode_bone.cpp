@@ -784,12 +784,10 @@ ValueNode_Bone::get_bones_referenced_by(ValueNode::Handle value_node, bool recur
 	// if it's a ValueNode_Animated
 	if (ValueNode_Animated::Handle value_node_animated = ValueNode_Animated::Handle::cast_dynamic(value_node))
 	{
-		// ValueNode_Animated::Handle ret = ValueNode_Animated::create(type_bone_object);
-		ValueNode_Animated::WaypointList list(value_node_animated->waypoint_list());
-		for (auto iter = list.begin(); iter != list.end(); iter++)
+		for (auto const& wp : value_node_animated->get_all())
 		{
 //			printf("%s:%d getting bones from waypoint\n", __FILE__, __LINE__);
-			BoneSet ret2(get_bones_referenced_by(iter->get_value_node(), recursive));
+			BoneSet ret2(get_bones_referenced_by(wp.get_value_node(), recursive));
 			ret.insert(ret2.begin(), ret2.end());
 //			printf("added %d bones from waypoint to get %d\n", int(ret2.size()), int(ret.size()));
 		}

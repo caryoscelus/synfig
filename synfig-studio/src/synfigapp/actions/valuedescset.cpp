@@ -1105,7 +1105,6 @@ Action::ValueDescSet::prepare()
 				// animated value node by the difference.
 				// this is valid only for value types that allows it.
 				ValueNode_Animated::Handle animated=ValueNode_Animated::Handle::cast_dynamic(value_desc.get_value_node());
-				Waypoint waypoint;
 				Type &type=animated->get_type();
 				Type &value_type=value.get_type();
 				if(value_type==type &&
@@ -1131,10 +1130,9 @@ Action::ValueDescSet::prepare()
 						}
 					}
 
-					synfig::ValueNode_Animated::WaypointList::const_iterator iter;
-					for(iter=animated->waypoint_list().begin(); iter<animated->waypoint_list().end(); iter++)
+					// NOTE: iterating by copy
+					for (auto waypoint : animated->get_all())
 					{
-						waypoint=*iter;
 						ValueBase waypoint_value(waypoint.get_value());
 						if (type == type_integer)
 							waypoint_value=ValueBase(waypoint_value.get(int())+value.get(int())-(*animated)(time).get(int()));
