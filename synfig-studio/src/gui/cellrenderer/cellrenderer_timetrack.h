@@ -54,7 +54,6 @@
 
 #include <synfigapp/canvasinterface.h>
 #include <synfigapp/value_desc.h>
-#include <synfig/valuenodes/valuenode_animated.h>
 #include <synfig/valuenodes/valuenode_dynamiclist.h>
 #include <synfig/string.h>
 #include <synfig/time.h>

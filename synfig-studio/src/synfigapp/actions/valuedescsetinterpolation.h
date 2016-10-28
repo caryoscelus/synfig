@@ -30,7 +30,6 @@
 
 #include <synfigapp/action.h>
 #include <synfigapp/value_desc.h>
-#include <synfig/valuenodes/valuenode_animated.h>
 #include <list>
 
 /* === M A C R O S ========================================================= */
@@ -51,7 +50,6 @@ private:
 
 	ValueDesc value_desc;
 	synfig::Interpolation value;
-	//synfig::ValueNode_Animated::Handle value_node_animated;
 	synfig::Interpolation old_value;
 
 public:
