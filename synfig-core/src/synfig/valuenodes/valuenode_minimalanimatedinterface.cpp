@@ -91,6 +91,12 @@ AnimatedInterface::after_time(const Time& time)
 	});
 }
 
+bool
+AnimatedInterface::empty() const
+{
+	return count_all() == 0;
+}
+
 size_t
 AnimatedInterface::count_all() const
 {

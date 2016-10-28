@@ -97,6 +97,7 @@ public:
 	virtual MaybeIter after_time(const Time& time);
 
 public:
+	virtual bool empty() const;
 	virtual size_t count_all() const;
 	virtual size_t count_timeline(const String& timeline) const;
 

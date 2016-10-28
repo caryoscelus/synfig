@@ -242,7 +242,7 @@ Action::WaypointSetSmart::enclose_waypoint(const synfig::Waypoint& waypoint)
 				action->set_param("canvas_interface",get_canvas_interface());
 				action->set_param("value_node",ValueNode::Handle(value_node));
 
-				if(!value_node->waypoint_list().empty())
+				if(!value_node->empty())
 				{
 					action->set_param("time",keyframe.get_time());
 				}
@@ -301,7 +301,7 @@ Action::WaypointSetSmart::enclose_waypoint(const synfig::Waypoint& waypoint)
 				action->set_param("canvas_interface",get_canvas_interface());
 				action->set_param("value_node",ValueNode::Handle(value_node));
 
-				if(!value_node->waypoint_list().empty())
+				if(!value_node->empty())
 				{
 					action->set_param("time",keyframe.get_time());
 				}
@@ -342,10 +342,12 @@ Action::WaypointSetSmart::prepare()
 	{
 		//synfig::info("WaypointSetSmart: Move/Update?");
 		// Let's try to replace the old waypoint, if it exists
-		auto iter = value_node->find(waypoint);
+		auto maybe_iter = value_node->get_by_uid(waypoint);
 
-		if(iter == value_node->waypoint_list().end())
+		if (!maybe_iter.is_initialized())
 			throw int();
+
+		auto iter = *maybe_iter;
 
 		enclose_waypoint(*iter);
 

@@ -161,11 +161,10 @@ Action::WaypointAdd::calc_waypoint()
 void
 Action::WaypointAdd::perform()
 {
-	try { value_node->find(waypoint.get_time()); throw Error(_("A Waypoint already exists at this point in time (%s)"),waypoint.get_time().get_string().c_str());}
-	catch(synfig::Exception::NotFound) { }
-
-	try { if(value_node->find(waypoint)!=value_node->waypoint_list().end()) throw Error(_("This waypoint is already in the ValueNode"));}
-	catch(synfig::Exception::NotFound) { }
+	if (value_node->get_by_uid(waypoint))
+		throw Error(_("This waypoint is already in the ValueNode"));
+	if (value_node->at_time(waypoint.get_time()).is_initialized())
+		throw Error(_("A Waypoint already exists at this point in time (%s)"),waypoint.get_time().get_string().c_str());
 
 	value_node->add(waypoint);
 
