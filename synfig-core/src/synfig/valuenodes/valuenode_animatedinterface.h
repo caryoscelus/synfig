@@ -53,7 +53,7 @@ namespace synfig {
  * a value node. They must be redefined by the inherited classes and will
  * be different depending on the type of value being animated.
 */
-class ValueNode_AnimatedInterfaceConst: public  valuenodes::AnimatedInterface
+class ValueNode_AnimatedInterfaceConst : public valuenodes::AnimatedInterface
 {
 private:
 	class Internal;
@@ -62,9 +62,10 @@ public:
 	class Interpolator;
 
 	typedef synfig::Waypoint Waypoint;
-	typedef synfig::WaypointList WaypointList;
 
 private:
+	typedef synfig::WaypointList WaypointList;
+
 	typedef	std::pair<WaypointList::iterator,bool>	findresult;
 	typedef	std::pair<WaypointList::const_iterator,bool>	const_findresult;
 
