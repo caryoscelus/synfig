@@ -122,9 +122,7 @@ public:
 
 public:
 	AnimatedInterface(ValueNode& node) : ValueNode_Interface(node) {}
-	virtual ~AnimatedInterface()
-	{
-	}
+	virtual ~AnimatedInterface() = default;
 };
 
 }; // END of namespace valuenodes
