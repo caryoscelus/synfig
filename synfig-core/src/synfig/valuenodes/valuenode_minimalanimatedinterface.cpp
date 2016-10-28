@@ -91,6 +91,18 @@ AnimatedInterface::after_time(const Time& time)
 	});
 }
 
+size_t
+AnimatedInterface::count_all() const
+{
+	return boost::size(get_all());
+}
+
+size_t
+AnimatedInterface::count_timeline(const String& timeline) const
+{
+	return boost::size(get_timeline(timeline));
+}
+
 AnimatedInterface::MaybeIter
 AnimatedInterface::add_waypoint(const Time& time)
 {

@@ -30,6 +30,8 @@
 #include <synfig/valuenode.h>
 #include <synfig/waypoint.h>
 
+#include <cstddef>
+
 #include <boost/optional.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/algorithm/find.hpp>
@@ -93,6 +95,10 @@ public:
 
 	//! Find waypoint after `time`
 	virtual MaybeIter after_time(const Time& time);
+
+public:
+	virtual size_t count_all() const;
+	virtual size_t count_timeline(const String& timeline) const;
 
 protected:
 	virtual MaybeIter before_or_after_time(const Time& time, std::function<bool(const Time&, const Time&)> cmp);

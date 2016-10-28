@@ -134,7 +134,7 @@ Action::WaypointRemove::perform()
 
 	// In this case, we need to convert this to a
 	// constant value node
-	if(value_node->waypoint_list().size()==0)
+	if(value_node->count_all()==0)
 	{
 		if(!value_node_ref)
 		{
@@ -170,7 +170,7 @@ Action::WaypointRemove::undo()
 {
 	if(value_node_ref)
 	{
-		if(value_node->waypoint_list().size()!=0)
+		if(value_node->count_all()!=0)
 			throw Error(_("This animated value node should be empty, but for some reason it isn't. This is a bug. (1)"));
 
 		if (value_node->get_id() == "" && value_node_ref->get_id() != "")
@@ -188,11 +188,11 @@ Action::WaypointRemove::undo()
 		if(get_canvas_interface())
 			get_canvas_interface()->signal_value_node_replaced()(value_node_ref,value_node);
 
-		if(value_node->waypoint_list().size()!=0)
+		if(value_node->count_all()!=0)
 			throw Error(_("This animated value node should be empty, but for some reason it isn't. This is a bug. (2)"));
 	}
 
-	if(value_node->waypoint_list().size()!=0)
+	if(value_node->count_all()!=0)
 	{
 		try { value_node->find(waypoint.get_time()); throw Error(_("A Waypoint already exists at this point in time"));}
 		catch(synfig::Exception::NotFound) { }

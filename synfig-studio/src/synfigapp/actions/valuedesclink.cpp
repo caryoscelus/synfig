@@ -222,11 +222,11 @@ Action::ValueDescLink::set_param(const synfig::String& name, const Action::Param
 			// If both are animated, and this one has more waypoints, then use the one with more waypoints
 			else if(ValueNode_Animated::Handle::cast_dynamic(link_value_node) &&
 					ValueNode_Animated::Handle::cast_dynamic(value_desc.get_value_node()) &&
-					ValueNode_Animated::Handle::cast_dynamic(link_value_node)->waypoint_list().size() !=
-					ValueNode_Animated::Handle::cast_dynamic(value_desc.get_value_node())->waypoint_list().size())
+					ValueNode_Animated::Handle::cast_dynamic(link_value_node)->count_all() !=
+					ValueNode_Animated::Handle::cast_dynamic(value_desc.get_value_node())->count_all())
 			{
-				if (ValueNode_Animated::Handle::cast_dynamic(link_value_node)->waypoint_list().size() <
-					ValueNode_Animated::Handle::cast_dynamic(value_desc.get_value_node())->waypoint_list().size())
+				if (ValueNode_Animated::Handle::cast_dynamic(link_value_node)->count_all() <
+					ValueNode_Animated::Handle::cast_dynamic(value_desc.get_value_node())->count_all())
 				{
 					status_level = 4;
 					status_message = _("There's a tie for most referenced, and both are animated; using the one with the most waypoints.");

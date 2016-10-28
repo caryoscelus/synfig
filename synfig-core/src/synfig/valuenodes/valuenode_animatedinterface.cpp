@@ -261,7 +261,7 @@ public:
 	{
 		if (animated.waypoint_list().empty())
 			{ ValueNode::add_value_to_map(x, 0, animated.node().get_type()); return; }
-		if (animated.waypoint_list().size() == 1)
+		if (animated.count_all() == 1)
 			{ animated.waypoint_list().front().get_value_node()->get_values(x); return; }
 
 		for(WaypointList::const_iterator i = animated.waypoint_list().begin(); i != animated.waypoint_list().end(); ++i)
