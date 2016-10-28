@@ -40,7 +40,6 @@
 #include <synfigapp/canvasinterface.h>
 #include <synfigapp/value_desc.h>
 #include "trees/childrentreestore.h"
-#include <synfig/valuenodes/valuenode_animated.h>
 
 #include "widgets/widget_value.h"
 

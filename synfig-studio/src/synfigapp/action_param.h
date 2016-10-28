@@ -43,7 +43,6 @@
 #include <synfigapp/value_desc.h>
 #include <synfig/value.h>
 #include <synfig/activepoint.h>
-#include <synfig/valuenodes/valuenode_animated.h>
 #include <synfig/string.h>
 #include <synfig/keyframe.h>
 #include <synfig/waypoint.h>
@@ -106,8 +105,8 @@ private:
 		etl::trivial<synfig::ValueNode::LooseHandle> value_node;
 		etl::trivial<synfig::ValueBase> value;
 		etl::trivial<synfig::Activepoint> activepoint;
-		etl::trivial<synfig::ValueNode_Animated::Waypoint> waypoint;
-		etl::trivial<synfig::ValueNode_Animated::Waypoint::Model> waypoint_model;
+		etl::trivial<synfig::Waypoint> waypoint;
+		etl::trivial<synfig::Waypoint::Model> waypoint_model;
 		etl::trivial<synfig::String> string;
 		etl::trivial<synfig::Keyframe> keyframe;
 		etl::trivial<synfig::Time> time;

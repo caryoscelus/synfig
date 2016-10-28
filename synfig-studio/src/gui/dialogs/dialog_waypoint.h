@@ -50,8 +50,8 @@
 
 
 #include <synfigapp/value_desc.h>
-#include <synfig/valuenodes/valuenode_animated.h>
 #include <synfig/valuenodes/valuenode_dynamiclist.h>
+#include <synfig/waypoint.h>
 #include <synfig/string.h>
 #include <synfig/time.h>
 
@@ -89,8 +89,8 @@ public:
 	void set_value_desc(synfigapp::ValueDesc value_desc);
 	synfigapp::ValueDesc get_value_desc()const { return value_desc_; }
 
-	void set_waypoint(synfig::ValueNode_Animated::Waypoint x);
-	const synfig::ValueNode_Animated::Waypoint &get_waypoint()const;
+	void set_waypoint(synfig::Waypoint x);
+	const synfig::Waypoint &get_waypoint()const;
 
 	sigc::signal<void> &signal_changed()
 	{return signal_changed_; }
