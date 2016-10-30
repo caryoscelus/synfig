@@ -66,11 +66,14 @@ namespace valuenodes {
 class AnimatedInterface : public synfig::ValueNode_Interface
 {
 public:
-	using Range = boost::any_range<Waypoint, boost::forward_traversal_tag, Waypoint&, std::ptrdiff_t>;
+	template <class W>
+	using GenericRange = boost::any_range<Waypoint, boost::forward_traversal_tag, W, std::ptrdiff_t>;
+
+	using Range = GenericRange<Waypoint&>;
 	using Iter = Range::iterator;
 	using MaybeIter = boost::optional<Iter>;
 
-	using ConstRange = boost::any_range<Waypoint, boost::forward_traversal_tag, const Waypoint&, std::ptrdiff_t>;
+	using ConstRange = GenericRange<const Waypoint&>;
 	using ConstIter = ConstRange::iterator;
 	using MaybeConstIter = boost::optional<ConstIter>;
 

@@ -7,6 +7,7 @@
 **	\legal
 **	Copyright (c) 2002-2005 Robert B. Quattlebaum Jr., Adrian Bentley
 **	Copyright (c) 2007 Chris Moore
+**	Copyright (c) 2016 caryoscelus
 **
 **	This package is free software; you can redistribute it and/or
 **	modify it under the terms of the GNU General Public License as
@@ -180,12 +181,13 @@ void
 Action::WaypointSetSmart::calc_waypoint()
 {
 	Time time=waypoint.get_time();
-	try
+	auto maybe_iter = value_node->at_time(waypoint.get_time());
+	if (maybe_iter.is_initialized())
 	{
 		// Trivial case, we are sitting on a waypoint
-		waypoint=*value_node->find(waypoint.get_time());
+		waypoint = **maybe_iter;
 	}
-	catch(...)
+	else
 	{
 		waypoint=value_node->new_waypoint_at_time(time);
 		Interpolation interp=value_node->get_interpolation();
@@ -199,10 +201,11 @@ Action::WaypointSetSmart::enclose_waypoint(const synfig::Waypoint& waypoint)
 {
 	times.insert(waypoint.get_time());
 
-	try {
-		times.insert(value_node->find(waypoint)->get_time());
-//		synfig::info(__FILE__":%d: value_node->find(waypoint)->get_time()=%s",__LINE__,value_node->find(waypoint)->get_time().get_string().c_str());
-	}catch (...) { }
+	auto maybe_iter = value_node->get_by_uid(waypoint);
+	if (maybe_iter.is_initialized())
+	{
+		times.insert((*maybe_iter)->get_time());
+	}
 
 	// First we need to add any waypoints necessary to
 	// maintain the integrity of the keyframes.
@@ -229,12 +232,9 @@ Action::WaypointSetSmart::enclose_waypoint(const synfig::Waypoint& waypoint)
 			}
 
 			times.insert(keyframe.get_time());
-			try
-			{
-				value_node->find(keyframe.get_time());
-//				synfig::info(__FILE__":%d: waypointtime=%s",__LINE__,value_node->find(keyframe.get_time())->get_time().get_string().c_str());
-			}
-			catch(synfig::Exception::NotFound)
+			auto maybe_iter = value_node->at_time(keyframe.get_time());
+			// if no waypoint at time
+			if (!maybe_iter.is_initialized())
 			{
 				Action::Handle action(WaypointAdd::create());
 
@@ -286,14 +286,9 @@ Action::WaypointSetSmart::enclose_waypoint(const synfig::Waypoint& waypoint)
 			else
 				times.insert(keyframe.get_time());
 
-			try
-			{
-				value_node->find(keyframe.get_time());
-				//synfig::info(__FILE__":%d: time=%s",__LINE__,keyframe.get_time().get_string().c_str());
-				//synfig::info(__FILE__":%d: waypointtime=%s",__LINE__,value_node->find(keyframe.get_time())->get_time().get_string().c_str());
-
-			}
-			catch(synfig::Exception::NotFound)
+			auto maybe_iter = value_node->at_time(keyframe.get_time());
+			// if no waypoint at time
+			if (!maybe_iter.is_initialized())
 			{
 				Action::Handle action(WaypointAdd::create());
 
@@ -372,26 +367,30 @@ Action::WaypointSetSmart::prepare()
 	{
 		//synfig::info("WaypointSetSmart: Replace?");
 		// Check to see if a waypoint exists at this point in time
-		auto iter=value_node->find(waypoint.get_time());
+		auto maybe_iter = value_node->at_time(waypoint.get_time());
+		if (maybe_iter.is_initialized())
+		{
+			auto iter = *maybe_iter;
 
-		waypoint.mimic(*iter);
+			waypoint.mimic(*iter);
 
-		enclose_waypoint(*iter);
+			enclose_waypoint(*iter);
 
-		Action::Handle action(WaypointSet::create());
+			Action::Handle action(WaypointSet::create());
 
-		action->set_param("canvas",get_canvas());
-		action->set_param("canvas_interface",get_canvas_interface());
-		action->set_param("value_node",ValueNode::Handle(value_node));
-		action->set_param("waypoint",waypoint);
+			action->set_param("canvas",get_canvas());
+			action->set_param("canvas_interface",get_canvas_interface());
+			action->set_param("value_node",ValueNode::Handle(value_node));
+			action->set_param("waypoint",waypoint);
 
-		assert(action->is_ready());
-		if(!action->is_ready())
-			throw Error(Error::TYPE_NOTREADY);
+			assert(action->is_ready());
+			if(!action->is_ready())
+				throw Error(Error::TYPE_NOTREADY);
 
-		add_action(action);
+			add_action(action);
 
-		return;
+			return;
+		}
 	}
 	catch(synfig::Exception::NotFound){ } catch(int){ }
 

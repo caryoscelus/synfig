@@ -1308,11 +1308,12 @@ Instance::make_param_menu(Gtk::Menu *menu,synfig::Canvas::Handle canvas, synfiga
 	{
 		ValueNode_Animated::Handle value_node(ValueNode_Animated::Handle::cast_dynamic(value_desc2.get_value_node()));
 
+		// TODO: handle exceptions more accurately
 		try
 		{
 			// try to find a waypoint at the current time - if we
 			// can't, we don't want the menu entry - an exception is thrown
-			auto iter = value_node->find(canvas->get_time());
+			auto iter = *value_node->at_time(canvas->get_time());
 			std::set<synfig::Waypoint, std::less<UniqueID> > waypoint_set;
 			waypoint_set.insert(*iter);
 

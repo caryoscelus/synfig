@@ -1,12 +1,13 @@
 /* === S Y N F I G ========================================================= */
 /*!	\file timepointcollect.cpp
-**	\brief Template File
+**	\brief Waypoint collecting
 **
 **	$Id$
 **
 **	\legal
 **	Copyright (c) 2002-2005 Robert B. Quattlebaum Jr., Adrian Bentley
 **	Copyright (c) 2007 Chris Moore
+**	Copyright (c) 2016 caryoscelus
 **
 **	This package is free software; you can redistribute it and/or
 **	modify it under the terms of the GNU General Public License as
@@ -120,20 +121,19 @@ synfig::waypoint_collect(set<Waypoint, std::less<UniqueID> >	&waypoint_set,
 	value_node_animated=value_node_animated.cast_dynamic(node);
 	if(value_node_animated)
 	{
-		try{
-			Waypoint waypoint=*value_node_animated->find(time);
-
-			// If it is already in the waypoint set, then
-			// don't bother adding it again
-			if(waypoint_set.find(waypoint)!=waypoint_set.end())
-				return 0;
-
-			waypoint_set.insert(waypoint);
-			return 1;
-		}catch(...)
-		{
+		auto maybe_iter = value_node_animated->at_time(time);
+		if (!maybe_iter.is_initialized())
 			return 0;
-		}
+
+		auto waypoint = **maybe_iter;
+
+		// If it is already in the waypoint set, then
+		// don't bother adding it again
+		if(waypoint_set.find(waypoint)!=waypoint_set.end())
+			return 0;
+
+		waypoint_set.insert(waypoint);
+		return 1;
 	}
 
 	return 0;

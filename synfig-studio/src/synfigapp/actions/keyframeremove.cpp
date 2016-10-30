@@ -180,8 +180,10 @@ Action::KeyframeRemove::process_value_desc(const synfigapp::ValueDesc& value_des
 		try
 		{
 			ValueNode_Animated::Handle value_node_animated(ValueNode_Animated::Handle::cast_dynamic(value_node));
-			Waypoint waypoint;
-			waypoint=*value_node_animated->find(time);
+			auto maybe_iter = value_node_animated->at_time(time);
+			if (!maybe_iter.is_initialized())
+				return;
+			auto waypoint = **maybe_iter;
 			assert(waypoint.get_time()==time);
 
 			Action::Handle action(WaypointRemove::create());

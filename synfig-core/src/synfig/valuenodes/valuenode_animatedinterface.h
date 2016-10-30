@@ -140,6 +140,7 @@ public:
 	/*! \note this does not add any waypoint to the ValueNode! */
 	Waypoint new_waypoint_at_time(const Time& t)const;
 
+protected:
 	//! Finds Waypoint iterator and associated boolean if found. Find by UniqueID
 	const_findresult 	         find_uid(const UniqueID &x)const;
 	//! Finds Waypoint iterator and associated boolean if found. Find by Time
@@ -189,7 +190,7 @@ public:
 	using ValueNode_AnimatedInterfaceConst::erase;
 	using ValueNode_AnimatedInterfaceConst::erase_all;
 
-	using ValueNode_AnimatedInterfaceConst::find;
+// 	using ValueNode_AnimatedInterfaceConst::find;
 
 	using ValueNode_AnimatedInterfaceConst::collect_waypoints;
 };

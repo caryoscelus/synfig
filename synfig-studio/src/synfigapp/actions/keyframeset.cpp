@@ -218,6 +218,8 @@ Action::KeyframeSet::scale_waypoints(const synfigapp::ValueDesc& value_desc,cons
 
 	if(value_node->collect_waypoints(old_begin,old_end,selected))
 	{
+		// TODO: what is this? looks like no-op
+#if 0
 		// check to make sure this operation is OK
 		for(iter=selected.begin();iter!=selected.end();++iter)
 		{
@@ -235,6 +237,7 @@ Action::KeyframeSet::scale_waypoints(const synfigapp::ValueDesc& value_desc,cons
 			}
 			catch(Exception::NotFound) { }
 		}
+#endif
 
 		int ret(0);
 		while(!selected.empty())
@@ -345,12 +348,13 @@ Action::KeyframeSet::process_value_desc(const synfigapp::ValueDesc& value_desc)
 				action->set_param("value_node",ValueNode::Handle(value_node_animated));
 
 				Waypoint waypoint;
-				try
+				auto maybe_iter = value_node_animated->at_time(old_time);
+				if (maybe_iter.is_initialized())
 				{
-					waypoint=*value_node_animated->find(old_time);
+					waypoint = **maybe_iter;
 					waypoint.set_time(new_time);
 				}
-				catch(...)
+				else
 				{
 					waypoint.set_time(new_time);
 					waypoint.set_value((*value_node_animated)(old_time));

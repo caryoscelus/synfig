@@ -1,11 +1,12 @@
 /* === S Y N F I G ========================================================= */
 /*!	\file waypointremove.cpp
-**	\brief Template File
+**	\brief Remove waypoint action
 **
 **	$Id$
 **
 **	\legal
 **	Copyright (c) 2002-2005 Robert B. Quattlebaum Jr., Adrian Bentley
+**	Copyright (c) 2016 caryoscelus
 **
 **	This package is free software; you can redistribute it and/or
 **	modify it under the terms of the GNU General Public License as
@@ -120,8 +121,10 @@ Action::WaypointRemove::is_ready()const
 void
 Action::WaypointRemove::perform()
 {
-	auto iter = value_node->find(waypoint);
+	// TODO: exception handling
+	auto iter = *value_node->get_by_uid(waypoint);
 
+	// this could never happen, right?
 	if((UniqueID)*iter!=(UniqueID)waypoint)
 		throw Error(_("UniqueID mismatch, iter=%d, waypoint=%d"),iter->get_uid(),waypoint.get_uid());
 

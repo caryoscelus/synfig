@@ -158,11 +158,12 @@ Action::KeyframeWaypointSet::process_value_desc(const synfigapp::ValueDesc& valu
 			action->set_param("value_node",ValueNode::Handle(value_node));
 
 			Waypoint waypoint;
-			try
+			auto maybe_iter = value_node->at_time(keyframe.get_time());
+			if (maybe_iter.is_initialized())
 			{
-				waypoint=*value_node->find(keyframe.get_time());
+				waypoint = **maybe_iter;
 			}
-			catch(...)
+			else
 			{
 				waypoint.set_time(keyframe.get_time());
 				waypoint.set_value((*value_node)(keyframe.get_time()));

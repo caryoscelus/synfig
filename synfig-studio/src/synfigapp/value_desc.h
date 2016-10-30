@@ -368,12 +368,18 @@ public:
 			return layer->dynamic_param_list().find(name)->second;
 		if(parent_is_linkable_value_node())
 			return (synfig::LinkableValueNode::Handle::cast_reinterpret(parent_value_node))->get_link(index);
-//			return reinterpret_cast<synfig::LinkableValueNode*>(parent_value_node.get())->get_link(index);
 		if(parent_is_value_node_const())
 			return parent_value_node;
 		if(parent_is_waypoint())
-			return (synfig::ValueNode_Animated::Handle::cast_reinterpret(parent_value_node))->find(waypoint_time)->get_value_node();
-		return 0;
+		{
+			auto animated = synfig::ValueNode_Animated::Handle::cast_reinterpret(parent_value_node);
+			auto maybe_waypoint = animated->at_time(waypoint_time);
+			if (!maybe_waypoint.is_initialized())
+				return nullptr;
+			auto waypoint = *maybe_waypoint;
+			return waypoint->get_value_node();
+		}
+		return nullptr;
 	}
 
 	synfig::ValueBase
