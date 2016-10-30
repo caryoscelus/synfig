@@ -100,10 +100,13 @@ protected:
 	//! Removes all waypoints
 	void erase_all();
 
+private:
 	//! Finds Waypoint iterator and associated boolean if found. Find by UniqueID
 	findresult 			   find_uid(const UniqueID &x);
 	//! Finds Waypoint iterator and associated boolean if found. Find by Time
 	findresult			   find_time(const Time &x);
+
+protected:
 	//! Finds a Waypoint by given UniqueID \x
 	WaypointList::iterator find(const UniqueID &x);
 	//! Finds a Waypoint by given Time \x
@@ -145,17 +148,20 @@ public:
 	WaypointList::const_iterator find(const UniqueID &x)const;
 	//! Finds a Waypoint by given Time \x
 	WaypointList::const_iterator find(const Time &x)const;
+
+protected:
 	//! Finds next Waypoint at a given time \x starting from current waypoint
 	WaypointList::const_iterator find_next(const Time &x)const;
 	//! Finds previous Waypoint at a given time \x starting from current waypoint
 	WaypointList::const_iterator find_prev(const Time &x)const;
+
+public:
 	//! Fills the \list with the waypoints between \begin and \end
 	int collect_waypoints(const Time& begin, const Time& end, std::vector<const Waypoint*>& list) const;
 
 	//! raise exception if waypoint exist at specified time
 	void no_waypoint_at_time(const Time& time);
 
-// protected:
 public:
 	// Implement new animated interface
 	virtual Range access_all() override;
@@ -168,12 +174,6 @@ public:
 	//! Removes a waypoint based on its UniqueId from the waypoint list
 	virtual void erase(const UniqueID &uid) override;
 
-// 	findresult optional_to_findresult(boost::optional<WaypointList::iterator> result) {
-// 		findresult f;
-// 		f.second = result.is_initialized();
-// 		f.first = result.get_value_or(boost::end(get_all()));
-// 		return f;
-// 	}
 };
 
 class ValueNode_AnimatedInterface: public ValueNode_AnimatedInterfaceConst
@@ -183,18 +183,13 @@ protected:
 	virtual void animated_changed() { node().changed(); }
 
 public:
-// 	using ValueNode_AnimatedInterfaceConst::editable_waypoint_list;
 	using ValueNode_AnimatedInterfaceConst::new_waypoint;
 	using ValueNode_AnimatedInterfaceConst::add;
 	using ValueNode_AnimatedInterfaceConst::insert_time;
 	using ValueNode_AnimatedInterfaceConst::erase;
 	using ValueNode_AnimatedInterfaceConst::erase_all;
 
-	using ValueNode_AnimatedInterfaceConst::find_uid;
-	using ValueNode_AnimatedInterfaceConst::find_time;
 	using ValueNode_AnimatedInterfaceConst::find;
-	using ValueNode_AnimatedInterfaceConst::find_next;
-	using ValueNode_AnimatedInterfaceConst::find_prev;
 
 	using ValueNode_AnimatedInterfaceConst::collect_waypoints;
 };
