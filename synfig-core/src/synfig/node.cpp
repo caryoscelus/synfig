@@ -256,43 +256,27 @@ Node::get_time_last_changed()const
 }
 
 void
-Node::add_child(Node*x)
+Node::add_child(Node* child)
 {
-	if (getenv("SYNFIG_DEBUG_NODE_PARENT_SET"))
-		printf("%s:%d adding %lx (%s) as parent of %lx (%s) (%zd -> ", __FILE__, __LINE__,
-			   uintptr_t(this), get_string().c_str(),
-			   uintptr_t(x), x->get_string().c_str(),
-			   x->parent_set.size());
-
-	x->parent_set.insert(this);
-
-	if (getenv("SYNFIG_DEBUG_NODE_PARENT_SET"))
-		printf("%zd)\n", x->parent_set.size());
+	child->add_parent(this);
 }
 
 void
-Node::remove_child(Node*x)
+Node::remove_child(Node* child)
 {
-	if(x->parent_set.count(this) == 0)
-	{
-		if (getenv("SYNFIG_DEBUG_NODE_PARENT_SET"))
-			printf("%s:%d %lx (%s) isn't in parent set of %lx (%s)\n", __FILE__, __LINE__,
-				   uintptr_t(this), get_string().c_str(),
-				   uintptr_t(x), x->get_string().c_str());
+	child->remove_parent(this);
+}
 
-		return;
-	}
+void
+Node::add_parent(Node* parent)
+{
+	parent_set.insert(parent);
+}
 
-	if (getenv("SYNFIG_DEBUG_NODE_PARENT_SET"))
-		printf("%s:%d removing %lx (%s) from parent set of %lx (%s) (%zd -> ", __FILE__, __LINE__,
-			   uintptr_t(this), get_string().c_str(),
-			   uintptr_t(x), x->get_string().c_str(),
-			   x->parent_set.size());
-
-	x->parent_set.erase(this);
-
-	if (getenv("SYNFIG_DEBUG_NODE_PARENT_SET"))
-		printf("%zd)\n", x->parent_set.size());
+void
+Node::remove_parent(Node* parent)
+{
+	parent_set.erase(parent);
 }
 
 int

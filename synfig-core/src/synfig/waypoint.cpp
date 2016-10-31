@@ -158,7 +158,7 @@ Waypoint::set_parent_value_node(const etl::loose_handle<ValueNode> &x)
 	assert(!parent_);
 
 	parent_=x;
-	parent_->add_child(get_value_node().get());
+	get_value_node().get()->add_parent(&*parent_);
 }
 
 bool

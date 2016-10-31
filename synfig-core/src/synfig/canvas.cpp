@@ -797,7 +797,7 @@ Canvas::insert(iterator iter,etl::handle<Layer> x)
 
 	x->set_canvas(this);
 
-	add_child(x.get());
+	x.get()->add_parent(this);
 
 	LooseHandle correct_canvas(this);
 	//while(correct_canvas->is_inline())correct_canvas=correct_canvas->parent();
@@ -853,7 +853,7 @@ Canvas::erase(iterator iter)
 	// - dooglus 09-21-2007
 	disconnect_connections(*iter);
 
-	if(!op_flag_)remove_child(iter->get());
+	if (!op_flag_) iter->get()->remove_parent(this);
 
 	CanvasBase::erase(iter);
 	if(!op_flag_)changed();

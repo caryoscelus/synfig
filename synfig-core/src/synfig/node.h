@@ -163,7 +163,8 @@ private:
 public:
 
 	//! A set of pointers to parent nodes
-	//! \todo This should really be private
+	//! \todo This should really be private - make interface
+	//! \todo use smart pointers
 	std::set<Node*> 	parent_set;
 
 	/*
@@ -234,11 +235,19 @@ public:
 	//! Gets the time when the Node was changed
 	int get_time_last_changed()const;
 
+	//! Adds \parent as parent of this Node
+	void add_parent(Node* parent);
+
+	//! Removes \parent from this Node parents
+	void remove_parent(Node* parent);
+
 	//! Adds the parameter \x as the child of the current Node
-	void add_child(Node*x);
+	[[deprecated]]
+	void add_child(Node* child);
 
 	//! Removes the parameter \x as a child of the current Node
-	void remove_child(Node*x);
+	[[deprecated]]
+	void remove_child(Node* child);
 
 	//!Returns how many parenst has the current Node
 	int parent_count()const;
