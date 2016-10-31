@@ -1,4 +1,5 @@
 VALUENODES_HH = \
+	valuenodes/animated.h \
 	valuenodes/valuenode_add.h \
 	valuenodes/valuenode_and.h \
 	valuenodes/valuenode_anglestring.h \
@@ -68,6 +69,7 @@ VALUENODES_HH = \
 	valuenodes/valuenode_weightedaverage.h
 
 VALUENODES_CC = \
+	valuenodes/animated.cpp \
 	valuenodes/valuenode_add.cpp \
 	valuenodes/valuenode_and.cpp \
 	valuenodes/valuenode_anglestring.cpp \
