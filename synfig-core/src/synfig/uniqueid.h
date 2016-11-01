@@ -27,6 +27,8 @@
 
 /* === H E A D E R S ======================================================= */
 
+#include <cstddef>
+
 /* === M A C R O S ========================================================= */
 
 /* === T Y P E D E F S ===================================================== */
@@ -68,6 +70,8 @@ public:
 	bool operator!=(const UniqueID &rhs)const { return id_!=rhs.id_; }
 	bool operator<(const UniqueID &rhs)const { return id_<rhs.id_; }
 }; // END of class UniqueID
+
+std::size_t hash_value(UniqueID const& id);
 
 }; // END of namespace synfig
 

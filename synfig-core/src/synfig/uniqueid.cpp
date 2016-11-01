@@ -48,3 +48,9 @@ synfig::UniqueID::next_id()
 {
 	return ++uniqueid_pool_;
 }
+
+std::size_t
+synfig::hash_value(UniqueID const& id)
+{
+	return id.get_uid();
+}
