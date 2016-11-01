@@ -36,6 +36,7 @@
 #include <vector>
 #include "guid.h"
 #include "interpolation.h"
+#include "node.h"
 
 /* === M A C R O S ========================================================= */
 
@@ -221,6 +222,16 @@ public:
 	/*
  --	** -- M E M B E R   F U N C T I O N S -------------------------------------
 	*/
+
+public:
+	TimePoint to_timepoint() const {
+		TimePoint tp;
+		tp.set_time(get_time());
+		tp.set_before(get_before());
+		tp.set_after(get_after());
+		tp.set_guid(get_guid());
+		return tp;
+	}
 
 public:
 
