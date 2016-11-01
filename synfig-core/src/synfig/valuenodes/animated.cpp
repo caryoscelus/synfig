@@ -29,6 +29,8 @@
 #include <boost/multi_index/ordered_index.hpp>
 #include <boost/multi_index/mem_fun.hpp>
 
+#include <synfig/localization.h>
+
 /* === N A M E S P A C E S ================================================= */
 
 using namespace synfig;
@@ -61,6 +63,21 @@ struct Animated::Impl {
 
 /* === M E T H O D S ======================================================= */
 
+Animated::Animated(ValueNode& node):
+	AnimatedInterface(node),
+	impl(new Animated::Impl())
+{
+}
+
+Animated::Animated(Type& type):
+	AnimatedInterface(*(ValueNode*)this),
+	impl(new Animated::Impl())
+{
+// 	set_type(type);
+}
+
+Animated::~Animated() = default;
+
 Animated::Range
 Animated::access_all()
 {
@@ -91,4 +108,75 @@ Animated::get_timeline(const String& timeline) const
 	return iterator_range<
 		remove_reference<decltype(view)>::type::iterator
 	>(begin(view), end(view));
+}
+
+// Animated::MaybeIter
+// Animated::access_by_uid(UniqueId const& uid)
+// {
+// 	auto& view = impl->container.get<0>();
+// 	return view.find(uid);
+// }
+
+Animated::MaybeIter
+Animated::add_waypoint(Waypoint waypoint)
+{
+	impl->container.insert(waypoint);
+	return access_by_uid(waypoint);
+}
+
+ValueBase
+Animated::operator()(Time time) const
+{
+	return *value_at_time(time);
+}
+
+void
+Animated::get_times_vfunc(Node::time_set &set) const
+{
+	for (auto const& wp : get_all())
+	{
+		set.insert(wp.to_timepoint());
+	}
+}
+
+ValueNode::Handle
+Animated::clone(Canvas::LooseHandle canvas, const synfig::GUID& deriv_guid)const
+{
+	// Why?
+	auto new_guid = get_guid()^deriv_guid;
+
+	{
+		// TODO: check this
+		ValueNode* existing = find_value_node(new_guid).get();
+		if (existing)
+			return existing;
+	}
+
+	auto cloned = new Animated(get_type());
+
+	cloned->set_guid(new_guid);
+	cloned->set_parent_canvas(canvas);
+	for (auto wp : get_all())
+	{
+		cloned->add_waypoint(wp.clone(canvas, new_guid));
+	}
+	return cloned;
+}
+
+String
+Animated::get_name() const
+{
+	return "animated";
+}
+
+String
+Animated::get_local_name() const
+{
+	return _("Animated");
+}
+
+String
+Animated::get_string() const
+{
+	return "Animated";
 }

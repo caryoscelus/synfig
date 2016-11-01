@@ -29,6 +29,8 @@
 
 #include "valuenode_minimalanimatedinterface.h"
 
+#include <synfig/canvas.h>
+
 #include <memory>
 
 /* === C L A S S E S & S T R U C T S ======================================= */
@@ -37,11 +39,30 @@ namespace synfig {
 namespace valuenodes {
 
 class Animated : public ValueNode, public AnimatedInterface {
+protected:
+	explicit Animated(ValueNode& node);
+	explicit Animated(Type& type);
+
+public:
+	virtual ValueNode::Handle clone(Canvas::LooseHandle canvas, const synfig::GUID& deriv_guid) const override;
+
 public:
 	virtual Range access_all() override;
 	virtual Range access_timeline(const String& timeline) override;
 	virtual ConstRange get_all() const override;
 	virtual ConstRange get_timeline(const String& timeline) const override;
+	virtual MaybeIter add_waypoint(Waypoint waypoint) override;
+
+public:
+	virtual ValueBase operator()(Time time) const override;
+	virtual void get_times_vfunc(Node::time_set &set) const override;
+
+	virtual String get_name() const override;
+	virtual String get_local_name() const override;
+	virtual String get_string() const override;
+
+public:
+	virtual ~Animated();
 
 private:
 	struct Impl;

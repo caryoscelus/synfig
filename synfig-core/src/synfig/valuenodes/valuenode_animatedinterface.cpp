@@ -1328,6 +1328,14 @@ ValueNode_AnimatedInterfaceConst::get_timeline(const String& timeline) const
 	return get_all();
 }
 
+valuenodes::AnimatedInterface::MaybeIter
+ValueNode_AnimatedInterfaceConst::add_waypoint(Waypoint waypoint)
+{
+	// TODO
+	editable_waypoint_list().push_back(waypoint);
+	return access_by_uid(waypoint);
+}
+
 void
 ValueNode_AnimatedInterfaceConst::clear_all()
 {

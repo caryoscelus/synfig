@@ -88,16 +88,22 @@ public:
 	// Waypoint search functions
 	// All of them return optional waypoint pointer
 	//! Find waypoint by its UID
-	virtual MaybeIter get_by_uid(const UniqueID& uid);
+	virtual MaybeConstIter get_by_uid(const UniqueID& uid) const;
 
 	//! Find waypoint exactly at `time`
-	virtual MaybeIter at_time(const Time& time);
+	virtual MaybeConstIter at_time(const Time& time) const;
 
 	//! Find waypoint before `time`
-	virtual MaybeIter before_time(const Time& time);
+	virtual MaybeConstIter before_time(const Time& time) const;
 
 	//! Find waypoint after `time`
-	virtual MaybeIter after_time(const Time& time);
+	virtual MaybeConstIter after_time(const Time& time) const;
+
+public:
+	// Waypoint accessor search functions
+	virtual MaybeIter access_by_uid(const UniqueID& uid);
+	// Unsafe
+	virtual Iter direct_access(const UniqueID& uid);
 
 public:
 	virtual bool empty() const;
@@ -105,11 +111,18 @@ public:
 	virtual size_t count_timeline(const String& timeline) const;
 
 protected:
-	virtual MaybeIter before_or_after_time(const Time& time, std::function<bool(const Time&, const Time&)> cmp);
+	virtual MaybeConstIter before_or_after_time(const Time& time, std::function<bool(const Time&, const Time&)> cmp) const;
 
 public:
-	//! Add a waypoint
-	virtual MaybeIter add_waypoint(const synfig::Time& time);
+	//! Add a waypoint, using calculated value
+// 	virtual MaybeIter new_auto_waypoint(const synfig::Time& time);
+	//! Add a waypoint with given value
+	virtual MaybeIter new_waypoint(const Time& time, ValueBase value);
+	//! Add a waypoint linked to another valuenode
+	virtual MaybeIter new_linked_waypoint(const Time& time, ValueNode::Handle node);
+
+protected:
+	virtual MaybeIter add_waypoint(Waypoint waypoint) = 0;
 
 public:
 	// Waypoint edit functions
@@ -122,9 +135,25 @@ public:
 	virtual void erase(const UniqueID& uid);
 	//! Process all waypoints
 	virtual void apply_function(std::function<void (Waypoint& wp)> f);
+	//! Process waypoints read-only
+	virtual void scan_function(std::function<void (Waypoint const& wp)> f) const;
 
 public:
-	AnimatedInterface(ValueNode& node) : ValueNode_Interface(node) {}
+	virtual boost::optional<ValueBase> value_at_time(const Time& time) const;
+
+public:
+	// deprecated interface
+	//! Returns a new waypoint at a given time but it is not inserted in the Waypoint List.
+	/*! \note this does not add any waypoint to the ValueNode! */
+	[[deprecated]]
+	Waypoint new_waypoint_at_time(const Time& t) const;
+	[[deprecated]]
+	bool waypoint_is_only_use_of_valuenode(Waypoint &waypoint) const;
+	[[deprecated]]
+	int collect_waypoints(const Time& begin, const Time& end, std::vector<Waypoint*>& result);
+
+public:
+	explicit AnimatedInterface(ValueNode& node) : ValueNode_Interface(node) {}
 	virtual ~AnimatedInterface() = default;
 };
 

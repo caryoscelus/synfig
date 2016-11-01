@@ -171,6 +171,8 @@ public:
 	virtual ConstRange get_all() const override;
 	virtual ConstRange get_timeline(const String& timeline) const override;
 
+	virtual MaybeIter add_waypoint(Waypoint waypoint) override;
+
 	virtual void clear_all() override;
 	//! Removes a waypoint based on its UniqueId from the waypoint list
 	virtual void erase(const UniqueID &uid) override;
