@@ -29,7 +29,8 @@
 
 #include <synfig/canvas.h>
 
-#include <synfig/valuenodes/valuenode_animatedinterface.h>
+#include "animated.h"
+#include "valuenode_animatedinterface.h"
 
 /* === M A C R O S ========================================================= */
 
@@ -40,13 +41,11 @@ namespace synfig {
 /*! \class ValueNode_Animated
  *  \brief Virtual class for the ValueNode Animated implementation.
 */
-class ValueNode_Animated : public ValueNode, public ValueNode_AnimatedInterface
+class ValueNode_Animated : public valuenodes::Animated //, public ValueNode_AnimatedInterface
 {
 public:
 	typedef etl::handle<ValueNode_Animated> Handle;
 	typedef etl::handle<const ValueNode_Animated> ConstHandle;
-
-	ValueNode::Handle clone(Canvas::LooseHandle canvas, const synfig::GUID& deriv_guid)const;
 
 	//! Virtual member to be filled by inherited classes
 	virtual String get_name()const;
@@ -62,17 +61,14 @@ public:
 	//! Creates a Valuenode_Animated by ValueNode and Time
 	static Handle create(ValueNode::Handle value_node, const Time& time);
 
-	virtual ValueBase operator()(Time t) const;
-	virtual void get_values_vfunc(std::map<Time, ValueBase> &x) const;
-
-	using ValueNode_AnimatedInterface::get_interpolation;
-	using ValueNode_AnimatedInterface::set_interpolation;
+// 	virtual ValueBase operator()(Time t) const;
+// 	virtual void get_values_vfunc(std::map<Time, ValueBase> &x) const;
 
 protected:
 	ValueNode_Animated(Type &type);
 
 	virtual void on_changed();
-	virtual void get_times_vfunc(Node::time_set &set) const;
+// 	virtual void get_times_vfunc(Node::time_set &set) const;
 };
 
 }; // END of namespace synfig

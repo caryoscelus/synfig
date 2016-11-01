@@ -52,9 +52,9 @@ using namespace synfig;
 /* === M E T H O D S ======================================================= */
 
 ValueNode_Animated::ValueNode_Animated(Type &type):
-	ValueNode_AnimatedInterface(*(ValueNode*)this)
+	Animated(*(ValueNode*)this)
 {
-	ValueNode_AnimatedInterface::set_type(type);
+// 	ValueNode_AnimatedInterface::set_type(type);
 }
 
 ValueNode_Animated::Handle
@@ -69,19 +69,7 @@ ValueNode_Animated::Handle
 ValueNode_Animated::create(ValueNode::Handle value_node, const Time& time)
 {
 	ValueNode_Animated::Handle ret(create(value_node->get_type()));
-	ret->new_waypoint(time,value_node);
-	return ret;
-}
-
-
-ValueNode::Handle
-ValueNode_Animated::clone(Canvas::LooseHandle canvas, const synfig::GUID& deriv_guid)const
-{
-	{ ValueNode* x(find_value_node(get_guid()^deriv_guid).get()); if(x)return x; }
-	ValueNode_Animated::Handle ret(new ValueNode_Animated(get_type()));
-	ret->set_guid(get_guid()^deriv_guid);
-	ret->set_parent_canvas(canvas);
-	ret->assign(*this, deriv_guid);
+// 	ret->new_waypoint(time, value_node);
 	return ret;
 }
 
@@ -101,18 +89,5 @@ void
 ValueNode_Animated::on_changed()
 {
 	ValueNode::on_changed();
-	ValueNode_AnimatedInterface::on_changed();
+	Animated::on_changed();
 }
-
-ValueBase
-ValueNode_Animated::operator()(Time t) const
-	{ return ValueNode_AnimatedInterface::operator()(t); }
-
-void
-ValueNode_Animated::get_values_vfunc(std::map<Time, ValueBase> &x) const
-	{ ValueNode_AnimatedInterface::get_values_vfunc(x); }
-
-void
-ValueNode_Animated::get_times_vfunc(Node::time_set &set) const
-	{ ValueNode_AnimatedInterface::get_times_vfunc(set); }
-

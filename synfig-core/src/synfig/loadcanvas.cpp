@@ -1787,9 +1787,13 @@ CanvasParser::parse_animated(xmlpp::Element *element,Canvas::Handle canvas)
 						warning((*iter),strprintf(_("Unexpected element <%s> after <waypoint> data, ignoring..."),(*iter)->get_name().c_str()));
 			}
 
-
-			try {
-				auto waypoint=value_node->new_waypoint(time,waypoint_value_node);
+			auto maybe_waypoint = value_node->new_linked_waypoint(time,waypoint_value_node);
+			if (!maybe_waypoint)
+			{
+				synfig::warning("Cannot add waypoint at time "+time.get_string());
+				continue;
+			}
+			auto waypoint = *maybe_waypoint;
 
 			if(child->get_attribute("tension"))
 			{
@@ -1821,11 +1825,7 @@ CanvasParser::parse_animated(xmlpp::Element *element,Canvas::Handle canvas)
 			{
 				waypoint->set_after(parse_interpolation(child,"after"));
 			}
-			}
-			catch(Exception::BadTime x)
-			{
-				warning(child,x.what());
-			}
+
 			continue;
 
 		}
