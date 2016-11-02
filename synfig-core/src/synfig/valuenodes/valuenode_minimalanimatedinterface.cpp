@@ -69,12 +69,12 @@ AnimatedInterface::at_time(const Time& time) const
 }
 
 AnimatedInterface::MaybeConstIter
-AnimatedInterface::before_or_after_time(const Time& time, std::function<bool(const Time&, const Time&)> cmp) const
+AnimatedInterface::before_or_after_time(const Time& time, const Time& start_from, std::function<bool(const Time&, const Time&)> cmp) const
 {
 	// generic method
 	// override this in subclass for effectiveness
 	auto uid = UniqueID::nil();
-	auto last_time = Time::begin(time);
+	auto last_time = start_from;
 	scan_function([&uid, &last_time, time, cmp](auto const& waypoint) {
 		auto t = waypoint.get_time();
 		if (!time.comparable(t))
@@ -82,18 +82,19 @@ AnimatedInterface::before_or_after_time(const Time& time, std::function<bool(con
 		if (cmp(last_time, t) && cmp(t, time))
 		{
 			last_time = t;
-			uid = waypoint;
+			uid = (UniqueID)waypoint;
 		}
 	});
 	if (!uid)
 		return boost::none;
+	assert(get_by_uid(uid));
 	return get_by_uid(uid);
 }
 
 AnimatedInterface::MaybeConstIter
 AnimatedInterface::before_time(const Time& time) const
 {
-	return before_or_after_time(time, [](auto const& a, auto const& b) -> bool {
+	return before_or_after_time(time, Time::begin(time), [](auto const& a, auto const& b) -> bool {
 		return a < b;
 	});
 }
@@ -101,7 +102,7 @@ AnimatedInterface::before_time(const Time& time) const
 AnimatedInterface::MaybeConstIter
 AnimatedInterface::after_time(const Time& time) const
 {
-	return before_or_after_time(time, [](auto const& a, auto const& b) -> bool {
+	return before_or_after_time(time, Time::end(time), [](auto const& a, auto const& b) -> bool {
 		return a > b;
 	});
 }
@@ -154,7 +155,7 @@ AnimatedInterface::erase(const UniqueID& uid)
 void
 AnimatedInterface::scan_function(std::function<void (Waypoint const& wp)> f) const
 {
-	for (auto& wp : get_all())
+	for (auto const& wp : get_all())
 	{
 		f(wp);
 	}
@@ -192,7 +193,7 @@ AnimatedInterface::value_at_time(const Time& time) const
 		return make_optional((*after)->get_value(time));
 
 	// TODO: implement interpolation
-	return none;
+	return make_optional((*before)->get_value(time));
 }
 
 // deprecated

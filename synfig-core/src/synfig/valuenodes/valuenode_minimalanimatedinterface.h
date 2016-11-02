@@ -111,7 +111,7 @@ public:
 	virtual size_t count_timeline(const String& timeline) const;
 
 protected:
-	virtual MaybeConstIter before_or_after_time(const Time& time, std::function<bool(const Time&, const Time&)> cmp) const;
+	virtual MaybeConstIter before_or_after_time(const Time& time, const Time& start_from, std::function<bool(const Time&, const Time&)> cmp) const;
 
 public:
 	//! Add a waypoint, using calculated value
