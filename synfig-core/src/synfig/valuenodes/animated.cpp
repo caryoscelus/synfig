@@ -81,15 +81,15 @@ Animated::~Animated() = default;
 Animated::Range
 Animated::access_all()
 {
-	auto cont = impl->container;
-	return iterator_range<decltype(cont)::iterator>(begin(cont), end(cont));
+	auto& cont = impl->container;
+	return iterator_range<remove_reference<decltype(cont)>::type::iterator>(cont.begin(), cont.end());
 }
 
 Animated::ConstRange
 Animated::get_all() const
 {
-	auto cont = impl->container;
-	return iterator_range<decltype(cont)::iterator>(begin(cont), end(cont));
+	auto const& cont = impl->container;
+	return iterator_range<remove_reference<decltype(cont)>::type::iterator>(cont.begin(), cont.end());
 }
 
 Animated::Range
@@ -120,14 +120,22 @@ Animated::get_timeline(const String& timeline) const
 Animated::MaybeIter
 Animated::add_waypoint(Waypoint waypoint)
 {
-	impl->container.insert(waypoint);
-	return access_by_uid(waypoint);
+	auto result = impl->container.insert(waypoint);
+	if (result.second)
+	{
+		assert(access_by_uid(waypoint));
+		// TODO: just return iterator from result
+		return access_by_uid(waypoint);
+	}
+	return boost::none;
 }
 
 ValueBase
 Animated::operator()(Time time) const
 {
-	return *value_at_time(time);
+	auto maybe_result = value_at_time(time);
+	assert(maybe_result);
+	return *maybe_result;
 }
 
 void
