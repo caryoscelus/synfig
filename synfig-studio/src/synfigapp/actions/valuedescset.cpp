@@ -1029,7 +1029,7 @@ Action::ValueDescSet::prepare()
 			// Be sure that the newly created waypoint is set with the default
 			// interpolations.
 			// TODO: exception handling??
-			auto iter = *value_node->at_time(time);
+			auto iter = *value_node->access(value_node->at_time(time));
 			iter->set_before(interp==INTERPOLATION_UNDEFINED?synfigapp::Main::get_interpolation():interp);
 			iter->set_after(interp==INTERPOLATION_UNDEFINED?synfigapp::Main::get_interpolation():interp);
 			value_node->set_interpolation(interp);

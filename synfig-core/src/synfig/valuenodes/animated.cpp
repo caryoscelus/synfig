@@ -120,6 +120,7 @@ Animated::get_timeline(const String& timeline) const
 Animated::MaybeIter
 Animated::add_waypoint(Waypoint waypoint)
 {
+	waypoint.set_parent_value_node(&node());
 	auto result = impl->container.insert(waypoint);
 	if (result.second)
 	{

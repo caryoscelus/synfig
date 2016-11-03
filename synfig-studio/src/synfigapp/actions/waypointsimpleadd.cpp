@@ -134,7 +134,7 @@ Action::WaypointSimpleAdd::perform()
 	}
 
 	//add the value node in since it's safe
-	value_node->add(waypoint);
+	value_node->add_waypoint(waypoint);
 
 	// Signal that a valuenode has been changed
 	value_node->changed();
@@ -156,7 +156,7 @@ Action::WaypointSimpleAdd::undo()
 
 	if(time_overwrite)
 	{
-		value_node->add(overwritten_wp);
+		value_node->add_waypoint(overwritten_wp);
 	}
 
 	// Signal that a valuenode has been changed

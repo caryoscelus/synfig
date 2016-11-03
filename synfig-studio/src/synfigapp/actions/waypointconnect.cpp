@@ -132,7 +132,9 @@ Action::WaypointConnect::is_ready()const
 void
 Action::WaypointConnect::perform()
 {
-	auto iter = *parent_value_node->at_time(waypoint_time);
+	// TODO: error handling
+	auto maybe_iter = parent_value_node->at_time(waypoint_time);
+	auto iter = *parent_value_node->access(maybe_iter);
 
 	old_value_node=iter->get_value_node();
 	iter->set_value_node(new_value_node);
@@ -148,7 +150,8 @@ Action::WaypointConnect::perform()
 void
 Action::WaypointConnect::undo()
 {
-	auto iter = *parent_value_node->at_time(waypoint_time);
+	auto maybe_iter = parent_value_node->at_time(waypoint_time);
+	auto iter = *parent_value_node->access(maybe_iter);
 
 	iter->set_value_node(old_value_node);
 

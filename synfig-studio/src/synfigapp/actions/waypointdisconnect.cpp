@@ -136,7 +136,8 @@ Action::WaypointDisconnect::is_ready()const
 void
 Action::WaypointDisconnect::perform()
 {
-	auto iter = *parent_value_node->at_time(waypoint_time);
+	auto maybe_iter = parent_value_node->at_time(waypoint_time);
+	auto iter = *parent_value_node->access(maybe_iter);
 
 	old_value_node=iter->get_value_node();
 
@@ -158,7 +159,8 @@ Action::WaypointDisconnect::perform()
 void
 Action::WaypointDisconnect::undo()
 {
-	auto iter = *parent_value_node->at_time(waypoint_time);
+	auto maybe_iter = parent_value_node->at_time(waypoint_time);
+	auto iter = *parent_value_node->access(maybe_iter);
 
 	iter->set_value_node(old_value_node);
 

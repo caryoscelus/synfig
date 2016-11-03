@@ -41,6 +41,14 @@ AnimatedInterface::access_by_uid(const UniqueID& uid)
 	return temp_iter::optional_iter(range, iter);
 }
 
+AnimatedInterface::MaybeIter
+AnimatedInterface::access(MaybeConstIter iter)
+{
+	if (!iter)
+		return boost::none;
+	return access_by_uid(**iter);
+}
+
 AnimatedInterface::Iter
 AnimatedInterface::direct_access(const UniqueID& uid)
 {

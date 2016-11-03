@@ -102,6 +102,7 @@ public:
 public:
 	// Waypoint accessor search functions
 	virtual MaybeIter access_by_uid(const UniqueID& uid);
+	virtual MaybeIter access(MaybeConstIter iter);
 	// Unsafe
 	virtual Iter direct_access(const UniqueID& uid);
 

@@ -117,12 +117,12 @@ Dialog_Waypoint::on_delete_pressed()
 }
 
 void
-Dialog_Waypoint::set_waypoint(synfig::ValueNode_Animated::Waypoint x)
+Dialog_Waypoint::set_waypoint(synfig::Waypoint x)
 {
 	waypointwidget->set_waypoint(x);
 }
 
-const synfig::ValueNode_Animated::Waypoint &
+const synfig::Waypoint &
 Dialog_Waypoint::get_waypoint()const
 {
 	return waypointwidget->get_waypoint();

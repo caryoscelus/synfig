@@ -135,7 +135,7 @@ Action::WaypointSet::perform()
 		auto maybe_iter = value_node->get_by_uid(wp);
 		if (!maybe_iter.is_initialized())
 			throw Error(_("Unable to find waypoint"));
-		iters.push_back(*maybe_iter);
+		iters.push_back(*value_node->access(maybe_iter));
 	}
 
 	//check to see which valuenodes are going to override because of the time...
@@ -187,7 +187,7 @@ Action::WaypointSet::undo()
 		auto maybe_iter = value_node->get_by_uid(wp);
 		if (!maybe_iter.is_initialized())
 			throw Error(_("Unable to find waypoint"));
-		auto iter = *maybe_iter;
+		auto iter = *value_node->access(maybe_iter);
 
 		//overwrite with old one
 		*iter = wp;
@@ -196,7 +196,7 @@ Action::WaypointSet::undo()
 	//add back in all the points that we removed before...
 	for (auto const& wp : overwritten_waypoints)
 	{
-		value_node->add(wp);
+		value_node->add_waypoint(wp);
 	}
 
 	// Signal that a valuenode has been changed

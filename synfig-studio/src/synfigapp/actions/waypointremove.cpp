@@ -203,5 +203,5 @@ Action::WaypointRemove::undo()
 			throw Error(_("A Waypoint already exists at this point in time (%s)"),waypoint.get_time().get_string().c_str());
 	}
 
-	value_node->add(waypoint);
+	value_node->add_waypoint(waypoint);
 }
