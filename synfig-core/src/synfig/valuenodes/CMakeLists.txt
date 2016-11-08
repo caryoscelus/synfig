@@ -1,5 +1,6 @@
 target_sources(synfig
     PRIVATE
+        "${CMAKE_CURRENT_LIST_DIR}/animated.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/valuenode_add.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/valuenode_and.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/valuenode_anglestring.cpp"
@@ -29,6 +30,7 @@ target_sources(synfig
         "${CMAKE_CURRENT_LIST_DIR}/valuenode_join.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/valuenode_linear.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/valuenode_log.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/valuenode_minimalanimatedinterface.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/valuenode_not.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/valuenode_or.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/valuenode_pow.cpp"
