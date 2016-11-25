@@ -83,6 +83,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 ##
 
 include(cmake/install_header.cmake)
+include(cmake/catch.cmake)
 
 ##
 ## Sub-dirs
