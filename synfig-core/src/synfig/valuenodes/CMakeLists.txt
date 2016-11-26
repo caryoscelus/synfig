@@ -74,3 +74,5 @@ install(
     FILES ${VALUENODES_HEADERS}
     DESTINATION include/synfig/valuenodes
 )
+
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/tests)
