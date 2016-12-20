@@ -6,6 +6,7 @@
 #include "etl_profile.h"
 #include <utility>
 
+// DEPRECATED: there is no need to make namespace configurable
 #ifndef ETL_NAMESPACE
 # define ETL_NAMESPACE 			etl
 #endif

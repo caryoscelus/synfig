@@ -32,7 +32,6 @@
 
 #include "_curve_func.h"
 #include <cmath>				// for ldexp
-// #include <ETL/fixed>			// not used
 
 /* === M A C R O S ========================================================= */
 
@@ -60,7 +59,7 @@
 
 /* === C L A S S E S & S T R U C T S ======================================= */
 
-_ETL_BEGIN_NAMESPACE
+namespace etl {
 
 template<typename V,typename T> class bezier;
 
@@ -109,25 +108,6 @@ public:
 		,t);
 	}
 
-	/*
-	void evaluate(time_type t, value_type &f, value_type &df) const
-	{
-		t=(t-r)/(s-r);
-
-		value_type p1 = affine_func(
-							affine_func(a,b,t),
-							affine_func(b,c,t)
-							,t);
-		value_type p2 = affine_func(
-							affine_func(b,c,t),
-							affine_func(c,d,t)
-						,t);
-
-		f = affine_func(p1,p2,t);
-		df = (p2-p1)*3;
-	}
-	*/
-
 	void set_rs(time_type new_r, time_type new_s) { r=new_r; s=new_s; }
 	void set_r(time_type new_r) { r=new_r; }
 	void set_s(time_type new_s) { s=new_s; }
@@ -166,51 +146,6 @@ public:
 		return 0;
 	}
 
-	/* subdivide at some time t into 2 separate curves left and right
-
-		b0 l1
-		*		0+1 l2
-		b1 		*		1+2*1+2 l3
-		*		1+2		*			0+3*1+3*2+3 l4,r1
-		b2 		*		1+2*2+2	r2	*
-		*		2+3	r3	*
-		b3 r4	*
-		*
-
-		0.1 2.3 ->	0.1 2 3 4 5.6
-	*/
-/*	void subdivide(bezier_base *left, bezier_base *right, const time_type &time = (time_type)0.5) const
-	{
-		time_type t = (time-r)/(s-r);
-		bezier_base lt,rt;
-
-		value_type temp;
-
-		//1st stage points to keep
-		lt.a = a;
-		rt.d = d;
-
-		//2nd stage calc
-		lt.b = affine_func(a,b,t);
-		temp = affine_func(b,c,t);
-		rt.c = affine_func(c,d,t);
-
-		//3rd stage calc
-		lt.c = affine_func(lt.b,temp,t);
-		rt.b = affine_func(temp,rt.c,t);
-
-		//last stage calc
-		lt.d = rt.a = affine_func(lt.c,rt.b,t);
-
-		//set the time range for l,r (the inside values should be 1, 0 respectively)
-		lt.r = r;
-		rt.s = s;
-
-		//give back the curves
-		if(left) *left = lt;
-		if(right) *right = rt;
-	}
-	*/
 	value_type &
 	operator[](int i)
 	{ return (&a)[i]; }
@@ -221,7 +156,6 @@ public:
 };
 
 
-#if 1
 // Fast float implementation of a cubic bezier curve
 template <>
 class bezier_base<float,float> : public std::unary_function<float,float>
@@ -381,94 +315,6 @@ public:
 	{ return (&a)[i]; }
 };
 
-//#ifdef __FIXED__
-
-// Fast double implementation of a cubic bezier curve
-/*
-template <>
-template <class T,unsigned int FIXED_BITS>
-class bezier_base<fixed_base<T,FIXED_BITS> > : std::unary_function<fixed_base<T,FIXED_BITS>,fixed_base<T,FIXED_BITS> >
-{
-public:
-	typedef fixed_base<T,FIXED_BITS> value_type;
-	typedef fixed_base<T,FIXED_BITS> time_type;
-
-private:
-	affine_combo<value_type,time_type> affine_func;
-	value_type a,b,c,d;
-	time_type r,s;
-
-	value_type _coeff[4];
-	time_type drs; // reciprocal of (s-r)
-public:
-	bezier_base():r(0.0),s(1.0),drs(1.0) { }
-	bezier_base(
-		const value_type &a, const value_type &b, const value_type &c, const value_type &d,
-		const time_type &r=0, const time_type &s=1):
-		a(a),b(b),c(c),d(d),r(r),s(s),drs(1.0/(s-r)) { sync(); }
-
-	void sync()
-	{
-		drs=time_type(1)/(s-r);
-		_coeff[0]=                 a;
-		_coeff[1]=           b*3 - a*3;
-		_coeff[2]=     c*3 - b*6 + a*3;
-		_coeff[3]= d - c*3 + b*3 - a;
-	}
-
-	// 4 products, 3 sums, and 1 difference.
-	inline value_type
-	operator()(time_type t)const
-	{ t-=r; t*=drs; return _coeff[0]+(_coeff[1]+(_coeff[2]+(_coeff[3])*t)*t)*t; }
-
-	void set_rs(time_type new_r, time_type new_s) { r=new_r; s=new_s; drs=time_type(1)/(s-r); }
-	void set_r(time_type new_r) { r=new_r; drs=time_type(1)/(s-r); }
-	void set_s(time_type new_s) { s=new_s; drs=time_type(1)/(s-r); }
-	const time_type &get_r()const { return r; }
-	const time_type &get_s()const { return s; }
-	time_type get_dt()const { return s-r; }
-
-	//! Bezier curve intersection function
-	//! Calculates the time of intersection
-	//	for the calling curve.
-	//
-	time_type intersect(const bezier_base<value_type,time_type> &x, time_type t=0,int i=15)const
-	{
-		value_type system[4];
-		system[0]=_coeff[0]-x._coeff[0];
-		system[1]=_coeff[1]-x._coeff[1];
-		system[2]=_coeff[2]-x._coeff[2];
-		system[3]=_coeff[3]-x._coeff[3];
-
-		t-=r;
-		t*=drs;
-
-		// Newton's method
-		// Inner loop: 7 products, 5 sums, 1 difference
-		for(;i;i--)
-			t-=(time_type) ( (system[0]+(system[1]+(system[2]+(system[3])*t)*t)*t)/
-				(system[1]+(system[2]*2+(system[3]*3)*t)*t) );
-
-		t*=(s-r);
-		t+=r;
-
-		return t;
-	}
-
-	value_type &
-	operator[](int i)
-	{ return (&a)[i]; }
-
-	const value_type &
-	operator[](int i) const
-	{ return (&a)[i]; }
-};
-*/
-//#endif
-
-#endif
-
-
 
 template <typename V, typename T>
 class bezier_iterator
@@ -484,38 +330,6 @@ private:
 	difference_type t;
 	difference_type dt;
 	bezier_base<V,T>	curve;
-
-public:
-
-/*
-	reference
-	operator*(void)const { return curve(t); }
-	const surface_iterator&
-
-	operator++(void)
-	{ t+=dt; return &this; }
-
-	const surface_iterator&
-	operator++(int)
-	{ hermite_iterator _tmp=*this; t+=dt; return _tmp; }
-
-	const surface_iterator&
-	operator--(void)
-	{ t-=dt; return &this; }
-
-	const surface_iterator&
-	operator--(int)
-	{ hermite_iterator _tmp=*this; t-=dt; return _tmp; }
-
-
-	surface_iterator
-	operator+(difference_type __n) const
-	{ return surface_iterator(data+__n[0]+__n[1]*pitch,pitch); }
-
-	surface_iterator
-	operator-(difference_type __n) const
-	{ return surface_iterator(data-__n[0]-__n[1]*pitch,pitch); }
-*/
 
 };
 
@@ -983,7 +797,7 @@ private:
 	}
 };
 
-_ETL_END_NAMESPACE
+};
 
 /* === E X T E R N S ======================================================= */
 
