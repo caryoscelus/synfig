@@ -1,9 +1,9 @@
-add_executable(valuenode_add valuenode_add.cpp)
-target_link_libraries(valuenode_add Catch)
-target_link_libraries(valuenode_add synfig)
-add_test(test_valuenode_add valuenode_add)
+# TODO: move this somewhere else
+function(add_synfig_catch_test name)
+    add_executable(${name} ${name}.cpp)
+    target_link_libraries(${name} Catch synfig)
+    add_test("test_${name}" ${name})
+endfunction(add_synfig_catch_test)
 
-add_executable(timecurve timecurve.cpp)
-target_link_libraries(timecurve Catch)
-target_link_libraries(timecurve synfig)
-add_test(test_timecurve timecurve)
+add_synfig_catch_test(valuenode_add)
+add_synfig_catch_test(timecurve)
