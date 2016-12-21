@@ -1,5 +1,6 @@
 target_sources(synfig
     PRIVATE
+        "${CMAKE_CURRENT_LIST_DIR}/timecurve.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/valuenode_add.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/valuenode_and.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/valuenode_anglestring.cpp"
