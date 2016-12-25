@@ -44,7 +44,7 @@
 
 /* === M A C R O S ========================================================= */
 
-#define SYNFIG_COPYRIGHT "Copyright (c) 2001-2005 Robert B. Quattlebaum Jr., Adrian Bentley"
+#define SYNFIG_COPYRIGHT "Copyright (c) 2001-2005 Robert B. Quattlebaum Jr., Adrian Bentley\nCopyright (c) 2006-2016 Synfig developers"
 
 #ifdef _DEBUG
 #ifdef __FUNC__
