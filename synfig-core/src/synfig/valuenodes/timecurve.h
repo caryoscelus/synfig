@@ -30,7 +30,7 @@
 #include <synfig/valuenode.h>
 #include <synfig/localization.h>
 
-#include <2geom/bezier-curve.h>
+#include <2geom/path.h>
 
 #include <memory>
 
@@ -44,11 +44,6 @@ namespace valuenodes {
  */
 class TimeCurve : public LinkableValueNode
 {
-public:
-	// TODO: get rid of these
-	typedef etl::handle<TimeCurve> Handle;
-	typedef etl::handle<const TimeCurve> ConstHandle;
-
 public:
 	TimeCurve(const ValueBase& value);
 	virtual ~TimeCurve() {}
@@ -67,18 +62,22 @@ public:
 	static TimeCurve* create(const ValueBase &value=ValueBase()) { return new TimeCurve(value); }
 
 protected:
-	LinkableValueNode* create_new() const { return new TimeCurve(get_type()); }
+	virtual LinkableValueNode* create_new() const { return new TimeCurve(get_type()); }
 
 	virtual ValueNode::LooseHandle get_link_vfunc(int i) const;
 	virtual bool set_link_vfunc(int i,ValueNode::Handle x);
 	virtual Vocab get_children_vocab_vfunc() const;
 
+protected:
+	void sync_path(Time time) const;
+
 private:
-	Geom::BezierCurve curve;
+	mutable Geom::Path curve_cached;
+	ValueNode::RHandle curve_;
 
 public:
-	// temporary for testing
-	Geom::BezierCurve& get_curve() { return curve; }
+	// temporary public for testing
+	Geom::Path const& get_curve(Time time) const;
 };
 
 }; // END of namespace valuenodes

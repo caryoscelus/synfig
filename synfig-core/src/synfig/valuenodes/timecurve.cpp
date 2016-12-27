@@ -24,11 +24,13 @@
 
 #include "timecurve.h"
 
+#include "valuenode_bline.h"
+
 #include <synfig/valuenode_registry.h>
+#include <synfig/general.h>
 
 /* === U S I N G =========================================================== */
 
-using namespace std;
 using namespace synfig;
 using namespace synfig::valuenodes;
 
@@ -38,14 +40,52 @@ REGISTER_VALUENODE(TimeCurve, RELEASE_VERSION_CURRENT, "timecurve", "Time Curve"
 
 /* === M E T H O D S ======================================================= */
 
+void
+TimeCurve::sync_path(Time time) const
+{
+	auto vertex_list = (*curve_)(time).get_list();
+
+	auto p2g = [](auto p) -> Geom::Point {
+		return Geom::Point(p[0], p[1]);
+	};
+	// converting point/tangent list to Geom::Path
+	if (vertex_list.size() > 0)
+	{
+		for (auto i = 1; i < vertex_list.size(); ++i)
+		{
+			auto prev = vertex_list[i-1].get(BLinePoint());
+			auto prev_p = prev.get_vertex();
+			auto prev_t = prev_p+prev.get_tangent2()/3; // tangents are weird
+
+			auto next = vertex_list[i].get(BLinePoint());
+			auto next_p = next.get_vertex();
+			auto next_t = next_p-next.get_tangent1()/3; // tangents are weird
+
+			if (i == 1) {
+				curve_cached.start(p2g(prev_p));
+			}
+			curve_cached.appendNew<Geom::CubicBezier>(p2g(prev_t), p2g(next_t), p2g(next_p));
+		}
+		// make sure curve is not closed and we don't get extra roots
+		curve_cached.close(false);
+	}
+}
+
+Geom::Path const&
+TimeCurve::get_curve(Time time) const {
+	sync_path(time);
+	return curve_cached;
+}
+
 ValueBase
 TimeCurve::operator()(Time time) const
 {
+	auto const& curve = get_curve(time);
 	// TODO: deal with time properly
 	auto curve_roots = curve.roots((double)time, Geom::X);
 	assert(curve_roots.size() <= 1);
 	// TODO: use first or last value depending on time
-	auto t = curve_roots.size() == 1 ? curve_roots[0] : 0;
+	auto t = curve_roots.size() == 1 ? curve_roots[0] : Geom::PathTime();
 	auto result = curve.valueAt(t, Geom::Y);
 	auto vb = ValueBase(get_type());
 	vb.set(result);
@@ -54,8 +94,12 @@ TimeCurve::operator()(Time time) const
 
 TimeCurve::TimeCurve(const ValueBase& value) :
 	LinkableValueNode(value.get_type()),
-	curve(Geom::BezierCurveN<3>())
-{}
+	curve_cached(Geom::Path())
+{
+	auto& type = value.get_type();
+
+	set_link("path", new ValueNode_BLine());
+}
 
 bool
 TimeCurve::check_type(Type &type)
@@ -67,19 +111,28 @@ TimeCurve::check_type(Type &type)
 }
 
 bool
-TimeCurve::set_link_vfunc(int i,ValueNode::Handle value)
+TimeCurve::set_link_vfunc(int i, ValueNode::Handle value)
 {
+	// TODO: get rid of manual set_link_vfunc
+	assert(i == 0);
+	// TODO: get rid of this macro
+	CHECK_TYPE_AND_SET_VALUE(curve_, type_list);
 	return false;
 }
 
 ValueNode::LooseHandle
 TimeCurve::get_link_vfunc(int i) const
 {
+	// TODO: get rid of manual code
+	if (i == 0)
+		return curve_;
 	return nullptr;
 }
 
 LinkableValueNode::Vocab
 TimeCurve::get_children_vocab_vfunc() const
 {
-	return LinkableValueNode::Vocab();
+	auto vocab = LinkableValueNode::Vocab();
+	vocab.push_back(ParamDesc(ValueBase(), "path"));
+	return vocab;
 }
