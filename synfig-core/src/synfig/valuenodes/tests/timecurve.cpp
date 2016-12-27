@@ -25,10 +25,12 @@
 
 #include "../timecurve.h"
 
-using namespace std;
+#include <synfig/valuenodes/valuenode_dynamiclist.h>
+#include <synfig/valuenodes/valuenode_const.h>
+#include <synfig/blinepoint.h>
+
 using namespace synfig;
 using namespace synfig::valuenodes;
-namespace g2 = Geom;
 
 // this is used to get meaningful error messages in Catch REQUIRE
 // when dealing with ValueBase
@@ -36,17 +38,27 @@ namespace g2 = Geom;
 
 TEST_CASE("Time curve value node", "[valuenodes]") {
 	Type::initialize_all();
+	auto timecurve = TimeCurve::create(ValueBase(0.0));
 
-	SECTION("Time curve value at point", "[valuenodes]") {
-		auto timecurve = TimeCurve::create(ValueBase(0.0));
+	SECTION("Zero by default", "[valuenodes]") {
 		REQUIRE((*timecurve)(0) == 0.0);
-		timecurve->get_curve().setPoints(vector<g2::Point>({
-			g2::Point(0, 0),
-			g2::Point(1, 10),
-			g2::Point(2, 10),
-			g2::Point(3, 0)
-		}));
-		REQUIRE(TO_DOUBLE((*timecurve)(3)) == 0.0);
-		REQUIRE(TO_DOUBLE((*timecurve)(1.5)) == 7.5);
 	}
+	SECTION("Actual curve", "[valuenodes]") {
+		auto list = std::vector<ValueNode*>();
+
+		auto point = BLinePoint();
+		point.set_vertex(Point(0, 0));
+		point.set_tangent(Point(3, 30));
+		list.push_back(ValueNode_Const::create(point));
+
+		point.set_vertex(Point(3, 0));
+		point.set_tangent(Point(3, -30));
+		list.push_back(ValueNode_Const::create(point));
+		auto dlist = ValueNode_DynamicList::create_from_list(std::begin(list), std::end(list));
+		timecurve->set_link("path", dlist);
+		REQUIRE(TO_DOUBLE((*timecurve)(3)) == 0.0);
+		REQUIRE(TO_DOUBLE((*timecurve)(1.5))-7.5 < 1.0/256);
+	}
+	// TODO: check off-limit behaviour
+	// TODO: check error handling
 }
