@@ -6,7 +6,7 @@
 **	interpolate its values.
 **
 **	\legal
-**	Copyright (c) 2016 caryoscelus
+**	Copyright (c) 2016-2017 caryoscelus
 **
 **	This package is free software; you can redistribute it and/or
 **	modify it under the terms of the GNU General Public License as
@@ -22,6 +22,8 @@
 
 /* === H E A D E R S ======================================================= */
 
+#include <boost/format.hpp>
+
 #include "timecurve.h"
 
 #include "valuenode_bline.h"
@@ -29,10 +31,16 @@
 #include <synfig/valuenode_registry.h>
 #include <synfig/general.h>
 
+#include <algorithm>
+#include <stdexcept>
+
 /* === U S I N G =========================================================== */
 
 using namespace synfig;
 using namespace synfig::valuenodes;
+using std::min;
+using std::max;
+using boost::format;
 
 /* === G L O B A L S ======================================================= */
 
@@ -43,6 +51,7 @@ REGISTER_VALUENODE(TimeCurve, RELEASE_VERSION_CURRENT, "timecurve", "Time Curve"
 void
 TimeCurve::sync_path(Time time) const
 {
+	// TODO: validate curve
 	auto vertex_list = (*curve_)(time).get_list();
 
 	auto p2g = [](auto p) -> Geom::Point {
@@ -81,11 +90,26 @@ ValueBase
 TimeCurve::operator()(Time time) const
 {
 	auto const& curve = get_curve(time);
-	// TODO: deal with time properly
-	auto curve_roots = curve.roots((double)time, Geom::X);
-	assert(curve_roots.size() <= 1);
-	// TODO: use first or last value depending on time
-	auto t = curve_roots.size() == 1 ? curve_roots[0] : Geom::PathTime();
+	if (curve.empty())
+		return ValueBase(get_type());
+
+	// TODO: deal with timelines properly
+	auto x = max(
+		curve.initialPoint().x(),
+		min(
+			curve.finalPoint().x(),
+			(double) time
+		)
+	);
+	auto curve_roots = curve.roots(x, Geom::X);
+	// since x is in range between initial and final point, we should get a root
+	if (curve_roots.size() < 1)
+		throw std::runtime_error((format("TimeCurve: no roots found at time: %f.")%((double)time)).str());
+	// enable this when upstream issue is resolved
+	// https://github.com/inkscape/lib2geom/issues/14
+// 	if (curve_roots.size() > 1)
+// 		throw std::runtime_error((format("TimeCurve: too much roots (%d) found at time: %f.") % curve_roots.size() % ((double)time)).str());
+	auto t = curve_roots[0];
 	auto result = curve.valueAt(t, Geom::Y);
 	auto vb = ValueBase(get_type());
 	vb.set(result);

@@ -3,7 +3,7 @@
 **	\brief Simple Catch tests of Time Curve node
 **
 **	\legal
-**	Copyright (c) 2016 caryoscelus
+**	Copyright (c) 2016-2017 caryoscelus
 **
 **	This program is free software: you can redistribute it and/or modify
 **	it under the terms of the GNU General Public License as published by
@@ -54,11 +54,17 @@ TEST_CASE("Time curve value node", "[valuenodes]") {
 		point.set_vertex(Point(3, 0));
 		point.set_tangent(Point(3, -30));
 		list.push_back(ValueNode_Const::create(point));
+
+		point.set_vertex(Point(4, 10));
+		list.push_back(ValueNode_Const::create(point));
+
 		auto dlist = ValueNode_DynamicList::create_from_list(std::begin(list), std::end(list));
 		timecurve->set_link("path", dlist);
 		REQUIRE(TO_DOUBLE((*timecurve)(3)) == 0.0);
 		REQUIRE(TO_DOUBLE((*timecurve)(1.5))-7.5 < 1.0/256);
+		SECTION("Out of bounds check") {
+			REQUIRE(TO_DOUBLE((*timecurve)(10)) == 10.0);
+		}
 	}
-	// TODO: check off-limit behaviour
 	// TODO: check error handling
 }
