@@ -26,6 +26,8 @@ pkg_check_modules(CAIRO REQUIRED cairo)
 pkg_check_modules(LIBXML REQUIRED libxml++-2.6)
 pkg_check_modules(MLT REQUIRED mlt++)
 pkg_check_modules(FFTW REQUIRED fftw3)
+
+# TODO: make optional
 pkg_check_modules(LIB2GEOM REQUIRED 2geom)
 
 ## TODO: move to module where it is actually required
