@@ -36,15 +36,17 @@
 
 /* === U S I N G =========================================================== */
 
-using namespace synfig;
-using namespace synfig::valuenodes;
 using std::min;
 using std::max;
 using boost::format;
 
 /* === G L O B A L S ======================================================= */
 
+using namespace synfig::valuenodes;
 REGISTER_VALUENODE(TimeCurve, RELEASE_VERSION_CURRENT, "timecurve", "Time Curve")
+
+namespace synfig {
+namespace valuenodes {
 
 /* === M E T H O D S ======================================================= */
 
@@ -160,3 +162,6 @@ TimeCurve::get_children_vocab_vfunc() const
 	vocab.push_back(ParamDesc(ValueBase(), "path"));
 	return vocab;
 }
+
+}; // END of namespace valuenodes
+}; // END of namespace synfig
