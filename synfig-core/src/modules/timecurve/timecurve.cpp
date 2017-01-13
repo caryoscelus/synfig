@@ -26,7 +26,7 @@
 
 #include "timecurve.h"
 
-#include "valuenode_bline.h"
+#include <synfig/valuenodes/valuenode_bline.h>
 
 #include <synfig/valuenode_registry.h>
 #include <synfig/general.h>
