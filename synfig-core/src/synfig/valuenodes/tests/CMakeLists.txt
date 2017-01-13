@@ -6,4 +6,3 @@ function(add_synfig_catch_test name)
 endfunction(add_synfig_catch_test)
 
 add_synfig_catch_test(valuenode_add)
-add_synfig_catch_test(timecurve)

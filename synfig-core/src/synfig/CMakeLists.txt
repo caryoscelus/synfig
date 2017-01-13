@@ -16,7 +16,6 @@ target_include_directories(synfig
         ${LIBXML_INCLUDE_DIRS}
         ${MLT_INCLUDE_DIRS}
         ${FFTW_INCLUDE_DIRS}
-        ${LIB2GEOM_INCLUDE_DIRS}
 )
 
 target_sources(synfig
@@ -124,7 +123,6 @@ target_link_libraries(synfig
         ${MLT_LIBRARIES}
         ${ZLIB_LIBRARIES}
         ${FFTW_LIBRARIES}
-        ${LIB2GEOM_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
 
         # TODO: properly detect ltdl

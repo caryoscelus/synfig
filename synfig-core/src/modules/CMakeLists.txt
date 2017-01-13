@@ -39,6 +39,7 @@ set(MODS_ENABLED
     mod_svg
     mod_yuv420p
 #     mptr_mplayer - "This code has vulnerabilites"
+    timecurve
 )
 
 ## Magick++ support
