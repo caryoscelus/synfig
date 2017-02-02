@@ -36,7 +36,6 @@
 
 #include <synfig/general.h>
 
-#include <iostream>
 #include "version.h"
 #include "general.h"
 #include "module.h"
@@ -199,8 +198,6 @@ bool retrieve_modules_to_load(fs::path filename, std::set<std::string> &modules_
 
 void load_modules(fs::path root_path, ProgressCallback *cb)
 {
-	fs::path config_dir;
-
 	std::vector<fs::path> locations;
 	auto home_dir = fs::path(getenv("HOME"));
 
@@ -214,6 +211,8 @@ void load_modules(fs::path root_path, ProgressCallback *cb)
 	locations.emplace_back(SYSCONFDIR);
 #endif
 	locations.push_back(root_path / "etc/synfig");
+	// TODO: remove this when no longer required
+	locations.push_back(root_path / "etc");
 #ifdef __APPLE__
 	// TODO: check if this is correct
 	locations.emplace_back("/Library/Frameworks/synfig.framework/Resources/");
@@ -224,11 +223,12 @@ void load_modules(fs::path root_path, ProgressCallback *cb)
 	auto found_location = std::find_if(
 		std::begin(locations),
 		std::end(locations),
-		[config_dir](fs::path path) -> bool {
-			auto modules_cfg = config_dir / MODULE_LIST_FILENAME;
+		[](fs::path path) -> bool {
+			auto modules_cfg = path / MODULE_LIST_FILENAME;
 			return fs::exists(modules_cfg);
 		}
 	);
+	synfig::info((*found_location).native());
 	if (found_location == std::end(locations))
 	{
 		synfig::warning("Cannot find '%s', trying to load default modules", MODULE_LIST_FILENAME);
@@ -236,6 +236,7 @@ void load_modules(fs::path root_path, ProgressCallback *cb)
 	}
 	else
 	{
+		auto config_dir = *found_location;
 		std::set<std::string> modules_to_load;
 		retrieve_modules_to_load(config_dir / MODULE_LIST_FILENAME, modules_to_load);
 		auto module_d = config_dir / (MODULE_LIST_FILENAME ".d");

@@ -72,5 +72,5 @@ file(WRITE synfig_modules.cfg ${SYNFIG_MODULES_CONTENT})
 
 install(
     FILES synfig_modules.cfg
-    DESTINATION etc
+    DESTINATION etc/synfig
 )
