@@ -1641,14 +1641,14 @@ WorkArea::on_drawing_area_event(GdkEvent *event)
 			{
 				assert(device);
 				curr_input_device=device;
-				signal_input_device_changed()(curr_input_device);
+// 				signal_input_device_changed()(curr_input_device);
 			}
 		}
 		else
 		if(device)
 		{
 			curr_input_device=device;
-			signal_input_device_changed()(curr_input_device);
+// 			signal_input_device_changed()(curr_input_device);
 		}
 
 		assert(curr_input_device);

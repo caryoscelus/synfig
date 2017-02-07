@@ -4136,6 +4136,7 @@ CanvasView::process_event_key(EventKey x)
 void
 CanvasView::on_input_device_changed(GdkDevice* device)
 {
+	return;
 	if(!device)
 	{
 		get_smach().egress();
