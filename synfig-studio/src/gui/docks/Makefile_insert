@@ -18,7 +18,8 @@ DOCKS_HH = \
 	docks/dockbook.h \
 	docks/dockdialog.h \
 	docks/dockdroparea.h \
-	docks/dockmanager.h
+	docks/dockmanager.h \
+	docks/xsheet_view.h
 
 DOCKS_CC = \
 	docks/dialog_tooloptions.cpp \
@@ -40,7 +41,8 @@ DOCKS_CC = \
 	docks/dockbook.cpp \
 	docks/dockdialog.cpp \
 	docks/dockdroparea.cpp \
-	docks/dockmanager.cpp
+	docks/dockmanager.cpp \
+	docks/xsheet_view.cpp
 
 synfigstudio_src += \
 	$(DOCKS_HH) \

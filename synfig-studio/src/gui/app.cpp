@@ -138,6 +138,7 @@
 #include "docks/dock_navigator.h"
 #include "docks/dock_timetrack.h"
 #include "docks/dock_toolbox.h"
+#include "docks/xsheet_view.h"
 
 #include "modules/module.h"
 #include "modules/mod_palette/mod_palette.h"
@@ -283,6 +284,7 @@ studio::Dock_LayerGroups* dock_layer_groups;
 studio::Dock_Navigator* dock_navigator;
 studio::Dock_Timetrack* dock_timetrack;
 studio::Dock_Curves* dock_curves;
+studio::docks::XsheetView* dock_xsheet_view;
 
 std::list< etl::handle< studio::Module > > module_list_;
 
@@ -1551,6 +1553,10 @@ App::App(const synfig::String& basepath, int *argc, char ***argv):
 		studio_init_cb.task(_("Init Layer Sets..."));
 		dock_layer_groups = new studio::Dock_LayerGroups();
 		dock_manager->register_dockable(*dock_layer_groups);
+
+		studio_init_cb.task(_("Init X-Sheet..."));
+		dock_xsheet_view = new studio::docks::XsheetView();
+		dock_manager->register_dockable(*dock_xsheet_view);
 
 
 		studio_init_cb.task(_("Init Color Dialog..."));

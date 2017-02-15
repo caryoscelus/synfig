@@ -20,4 +20,10 @@ target_sources(synfigstudio
         "${CMAKE_CURRENT_LIST_DIR}/dockdialog.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/dockdroparea.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/dockmanager.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/xsheet_view.cpp"
+)
+
+install(
+    FILES "${CMAKE_CURRENT_LIST_DIR}/xsheet.glade"
+    DESTINATION share/synfig/ui
 )
