@@ -24,6 +24,8 @@ target_sources(synfigstudio
 )
 
 install(
-    FILES "${CMAKE_CURRENT_LIST_DIR}/xsheet.glade"
+    FILES
+        "${CMAKE_CURRENT_LIST_DIR}/xsheet.ui"
+        "${CMAKE_CURRENT_LIST_DIR}/xsheet_frame.ui"
     DESTINATION share/synfig/ui
 )

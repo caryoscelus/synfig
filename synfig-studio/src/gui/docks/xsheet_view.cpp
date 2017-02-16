@@ -32,6 +32,13 @@
 #include <gtkmm/builder.h>
 
 namespace studio {
+
+// TODO: move these into lib
+Glib::RefPtr<Gtk::Builder> load_ui(std::string const& fname)
+{
+	return Gtk::Builder::create_from_file(synfig::Main::get_instance().share_path+"/synfig/ui/"+fname);
+}
+
 namespace docks {
 
 class XsheetView::Impl {
@@ -49,8 +56,7 @@ public:
 public:
 	Impl(Gtk::Container* parent)
 	{
-		// TODO: fix path
-		auto builder = Gtk::Builder::create_from_file(synfig::Main::get_instance().share_path+"/synfig/ui/xsheet.glade");
+		auto builder = load_ui("xsheet.ui");
 
 		builder->get_widget("content", content);
 
@@ -92,27 +98,57 @@ public:
 			return;
 		}
 
+		// Cleanup old widgets
 		auto old_children = content->get_children();
 		for (auto old_child : old_children) {
 			content->remove(*old_child);
 		}
 
+		// TODO: get rid of manual ValueBase handling
+		auto selected_name_value = switch_layer->get_param("layer_name");
+		synfig::String selected_name;
+		if (selected_name_value.get_type() == synfig::type_string) {
+			selected_name = selected_name_value.get(synfig::String());
+		}
+
 		auto sub_canvas = switch_layer->get_sub_canvas();
 		for (auto child_layer : *sub_canvas)
 		{
-			synfig::info("Found layer");
 			auto fname_value = child_layer->get_param("filename");
 			if (fname_value.get_type() != synfig::type_string) {
 				synfig::warning("Not an import layer!");
 				continue;
 			}
-			auto fname = fname_value.get(std::string());
-			synfig::info(fname);
-			auto pixbuf = Gdk::Pixbuf::create_from_file(fname, 100, 100);
-			auto image = Gtk::manage(new Gtk::Image(pixbuf));
-			content->pack_start(*image, false, false);
+			auto fname = fname_value.get(synfig::String());
+
+			auto layer_name = child_layer->get_description();
+			auto selected = layer_name == selected_name;
+
+			load_frame(fname, layer_name, selected);
 		}
 		content->show_all_children();
+	}
+
+	void load_frame(synfig::String fname, synfig::String name, bool selected) {
+		auto builder = load_ui("xsheet_frame.ui");
+
+		Gtk::Widget* frame = nullptr;
+		builder->get_widget("frame", frame);
+
+		Gtk::Image* image = nullptr;
+		builder->get_widget("image", image);
+		auto pixbuf = Gdk::Pixbuf::create_from_file(fname, 100, 100);
+		image->set(pixbuf);
+
+		Gtk::Label* label = nullptr;
+		builder->get_widget("label", label);
+		// TODO: sanitize name
+		if (selected)
+			label->set_markup("<b>"+name+"</b>");
+		else
+			label->set_text(name);
+
+		content->pack_start(*frame, false, false);
 	}
 };
 
